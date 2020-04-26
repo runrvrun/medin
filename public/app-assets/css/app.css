@@ -39785,7 +39785,7 @@ Horizontal Timeline
   position: relative;
   display: inline-block;
   width: 100%;
-  padding: 0 0 35px 43px; }
+  padding: 0 0 5px 43px; }
   #timeline.timeline-left .timeline-item:after {
     content: '';
     position: absolute;

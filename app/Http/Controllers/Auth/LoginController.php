@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Session;
 use Lang;
 use App\Log;
-use App\Role;
 use App\User;
 
 class LoginController extends Controller
@@ -47,26 +46,25 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            // check expire date
-            $user = Auth::user();
-            if ($user->expired_at < date('Y-m-d')) {                    
-                Auth::logout();
-                return redirect('login')->withErrors([
-                    'email' => 'User already expire',
-                ]);
-            }
+            $user = Auth::user();            
             // check active
-            if (!$user->status) {                    
+            if ($user->status !== 'Active') { 
                 Auth::logout();
                 return redirect('login')->withErrors([
                     'email' => 'User inactive',
                 ]);
             }
-            $role = Role::where('role',$user->role)->first();
-            session(['privilege'=>$role->pages]);
-            Log::create(['user_id'=>Auth::user()->id,'action'=>'login','date'=>date('Y-m-d')]);
+            // get role privileges
+            $priv = \App\Role_privilege::where('role_id',Auth::user()->role_id)->get();
+            foreach($priv as $key=>$pri){
+                $privilege[$pri->page_id] = ['browse'=>$pri->browse,'add'=>$pri->add,'edit'=>$pri->edit,'delete'=>$pri->delete];
+            }
+            session(['privilege'=>$privilege]);
+            //
+            Log::create(['user_id'=>Auth::user()->id,'tag'=>'Login','detail'=>'Success']);
             return redirect()->intended('/admin');
         }else{
+            Log::create(['user_id'=>0,'tag'=>'Login','detail'=>'Failed. email: '.$request->email.'; IP: '.$request->ip()]);
             return redirect('login')->withErrors([
                 'email' => Lang::get('auth.failed'),
             ]);;

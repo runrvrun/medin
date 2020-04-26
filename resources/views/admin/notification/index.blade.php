@@ -72,7 +72,13 @@ var table = $('.browse-table').DataTable({
     responsive: resp,
     processing: true,
     serverSide: true,
-    ajax: '{!! url('admin/notification/indexjson') !!}',
+    ajax:{
+      url: '{!! url('admin/invitation/indexjson') !!}',
+      headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type: 'POST'
+    },
     columns: [
       { data: 'data.title', name: 'data.title' },
       { data: 'data.message', name: 'data.message' },

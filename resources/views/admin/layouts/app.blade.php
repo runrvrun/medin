@@ -4,13 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Vislog">
+    <meta name="description" content="MedIn">
     <meta name="keywords" content="advertising">
     <meta name="author" content="ArfianAgus">
     @if (trim($__env->yieldContent('pagetitle')))
     <h1>@yield('pagetitle')</h1>
     @else
-    <title>{{ config('app.name', 'VISLOG') }}</title>
+    <title>{{ config('app.name', 'MedIn') }}</title>
     @endif
     <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('/') }}app-assets/img/ico/apple-icon-60.png">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('/') }}app-assets/img/ico/apple-icon-76.png">
@@ -30,7 +30,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/vendors/css/prism.min.css">
     <!-- END VENDOR CSS-->
     <!-- BEGIN APEX CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/css/app.css?v=9">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/css/app.css?v=10">
     <!-- END APEX CSS-->
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css?v=1">
@@ -50,7 +50,7 @@
         <!-- Sidebar Header starts-->
         <div class="sidebar-header">
           <div class="logo clearfix"><a href="{{ url('/admin/') }}" class="logo-text float-left">
-              <div class="logo-img"><img src="{{ asset('images/vislog-logo-white.png') }}" width="32px" /></div><span class="text align-middle"> VISLOG</span></a><a id="sidebarToggle" href="javascript:;" class="nav-toggle d-none d-sm-none d-md-none d-lg-block"><i data-toggle="expanded" class="toggle-icon ft-toggle-right"></i></a><a id="sidebarClose" href="javascript:;" class="nav-close d-block d-md-block d-lg-none d-xl-none"><i class="ft-x"></i></a></div>
+              <div class="logo-img"><img src="{{ asset('images/medin-white.png') }}" width="32px" /></div><span class="text align-middle"> Med-In</span></a><a id="sidebarToggle" href="javascript:;" class="nav-toggle d-none d-sm-none d-md-none d-lg-block"><i data-toggle="expanded" class="toggle-icon ft-toggle-right"></i></a><a id="sidebarClose" href="javascript:;" class="nav-close d-block d-md-block d-lg-none d-xl-none"><i class="ft-x"></i></a></div>
         </div>
         <!-- Sidebar Header Ends-->
         <!-- / main menu header-->
@@ -58,60 +58,16 @@
         <div class="sidebar-content">
           <div class="nav-container">
             <ul id="main-menu-navigation" data-menu="menu-navigation" data-scroll-to-active="true" class="navigation navigation-main">
-              @if(session('privilege')['admin/highlight']['browse'] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/highlight') }}"><i class="ft-award"></i><span data-i18n="" class="menu-title">Highlight</span></a></li>@endif
-              @if(session('privilege')['admin/dashboard']['browse'] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/dashboard') }}"><i class="ft-bar-chart-2"></i><span data-i18n="" class="menu-title">Dashboard</span></a></li>@endif
-              @if(session('privilege')['admin/adsperformance']['browse'] ?? 0)<li class=" nav-item"><a href="{{ url('/admin/adsperformance') }}"><i class="ft-activity"></i><span data-i18n="" class="menu-title">Ads Performance</span></a></li>@endif
-              <li class="has-sub nav-item" id="cliplibrary"><a href="#"><i class="ft-film"></i><span data-i18n="" class="menu-title">Clip Library</span></a>
-                <ul class="menu-content">
-                @if(session('privilege')['admin/tvads']['browse'] ?? 0)<li><a href="{{ url('/admin/tvads') }}" class="menu-item"><i class="ft-monitor"></i>TV Ads</a></li>@endif
-                  @if(session('privilege')['admin/tvprogramme']['browse'] ?? 0)<li><a href="{{ url('/admin/tvprogramme') }}" class="menu-item"><i class="ft-play-circle"></i>TV Programme</a></li>@endif
-                </ul>
-              </li>
-              @if((session('privilege')['admin/mktsummary']['browse'] ?? 0) || (session('privilege')['admin/adexnett']['browse'] ?? 0) || (session('privilege')['admin/spotmatching']['browse'] ?? 0))
-              <li class="has-sub nav-item" id="marketingtools"><a href="#"><i class="ft-phone-call"></i><span data-i18n="" class="menu-title">Marketing Tools</span></a>
-                <ul class="menu-content">
-                  @if(session('privilege')['admin/mktsummary']['browse'] ?? 0)<li><a href="{{ url('/admin/mktsummary') }}" class="menu-item"><i class="ft-aperture"></i>Summary</a></li>@endif
-                  @if(session('privilege')['admin/adexnett']['browse'] ?? 0)<li><a href="{{ url('/admin/adexnett') }}" class="menu-item"><i class="ft-target"></i>Adex Nett</a></li>@endif
-                  @if(session('privilege')['admin/spotmatching']['browse'] ?? 0)<li><a href="{{ url('/admin/spotmatching') }}" class="menu-item"><i class="ft-check-circle"></i>Spot Matching</a></li>@endif
-                </ul>
-              </li>
-              @endif
-              @if((session('privilege')['admin/uploaddata/commercial']['browse'] ?? 0) || (session('privilege')['admin/uploadsearch/commercial']['browse'] ?? 0) || (session('privilege')['admin/spotpairing']['browse'] ?? 0) || (session('privilege')['admin/notification']['browse'] ?? 0))
-              <li class="has-sub nav-item" id="administrator"><a href="#"><i class="ft-aperture"></i><span data-i18n="" class="menu-title">Administrator</span></a>
-                <ul class="menu-content">
-                  <li class="has-sub nav-item" id="administrator"><a href="#"><i class="ft-upload-cloud"></i><span data-i18n="" class="menu-title">Upload Data</span></a>
-                    <ul class="menu-content">
-                      @if(session('privilege')['admin/uploaddata/commercial']['browse'] ?? 0)<li><a href="{{ url('/admin/uploaddata/commercial') }}" class="menu-item"><i class="ft-upload-cloud"></i>Commercial</a></li>@endif
-                      @if(session('privilege')['admin/uploaddata/commercialgrouped']['browse'] ?? 0)<li><a href="{{ url('/admin/uploaddata/commercialgrouped') }}" class="menu-item"><i class="ft-upload-cloud"></i>Commercial Grouped</a></li>@endif
-                      @if(session('privilege')['admin/uploaddata/tvprogramme']['browse'] ?? 0)<li><a href="{{ url('/admin/uploaddata/tvprogramme') }}" class="menu-item"><i class="ft-upload-cloud"></i>TV Programme</a></li>@endif
-                      @if(session('privilege')['admin/uploaddata/adexnett']['browse'] ?? 0)<li><a href="{{ url('/admin/uploaddata/adexnett') }}" class="menu-item"><i class="ft-upload-cloud"></i>Adex Nett</a></li>@endif
-                      @if(session('privilege')['admin/uploaddata/spotmatching']['browse'] ?? 0)<li><a href="{{ url('/admin/uploaddata/spotmatching') }}" class="menu-item"><i class="ft-upload-cloud"></i>Spot Matching</a></li>@endif
-                    </ul>
-                  </li>
-                  <li class="has-sub nav-item" id="administrator"><a href="#"><i class="ft-zoom-in"></i><span data-i18n="" class="menu-title">Search Data</span></a>
-                    <ul class="menu-content">
-                      @if(session('privilege')['admin/uploadsearch/commercial']['browse'] ?? 0)<li><a href="{{ url('/admin/uploadsearch/commercial') }}" class="menu-item"><i class="ft-zoom-in"></i>Commercial</a></li>@endif
-                      @if(session('privilege')['admin/uploadsearch/tvprogramme']['browse'] ?? 0)<li><a href="{{ url('/admin/uploadsearch/tvprogramme') }}" class="menu-item"><i class="ft-zoom-in"></i>TV Programme</a></li>@endif
-                      @if(session('privilege')['admin/uploadsearch/adstype']['browse'] ?? 0)<li><a href="{{ url('/admin/uploadsearch/adstype') }}" class="menu-item"><i class="ft-zoom-in"></i>Ads Type</a></li>@endif
-                    </ul>
-                  </li>
-                  @if(session('privilege')['admin/spotpairing']['browse'] ?? 0)<li><a href="{{ url('/admin/spotpairing') }}" class="menu-item"><i class="ft-voicemail"></i>Spot Pairing</a></li>@endif
-                  @if(session('privilege')['admin/videodata']['browse'] ?? 0)<li><a href="{{ url('/admin/videodata') }}" class="menu-item"><i class="ft-video"></i>Video Data</a></li>@endif
-                  @if(session('privilege')['admin/targetaudience']['browse'] ?? 0)<li><a href="{{ url('/admin/targetaudience') }}" class="menu-item"><i class="ft-star"></i>Target Audience</a></li>@endif
-                  @if(session('privilege')['admin/daypartsetting']['browse'] ?? 0)<li><a href="{{ url('/admin/daypartsetting') }}" class="menu-item"><i class="ft-sun"></i>Daypart Setting</a></li>@endif
-                  @if(session('privilege')['admin/tvchighlight']['browse'] ?? 0)<li><a href="{{ url('/admin/tvchighlight') }}" class="menu-item"><i class="ft-tv"></i>TVC Highlight</a></li>@endif
-                  @if(session('privilege')['admin/channel']['browse'] ?? 0)<li><a href="{{ url('/admin/channel') }}" class="menu-item"><i class="ft-tv"></i>Channel</a></li>@endif
-                  @if(session('privilege')['admin/notification']['browse'] ?? 0)<li><a href="{{ url('/admin/notification') }}" class="menu-item"><i class="ft-bell"></i>Notification</a></li>@endif
-                </ul>
-              </li>
-              @endif
-              <li class="has-sub nav-item" id="usermgt"><a href="#"><i class="ft-user-check"></i><span data-i18n="" class="menu-title">User Management</span></a>
-                <ul class="menu-content">
-                  @if(session('privilege')['admin/user']['browse'] ?? 0)<li><a href="{{ url('/admin/user') }}" class="menu-item"><i class="ft-user"></i>User</a></li>@endif
-                  @if(session('privilege')['admin/role']['browse'] ?? 0)<li><a href="{{ url('/admin/role') }}" class="menu-item"><i class="ft-users"></i>Role</a></li>@endif
-                </ul>
-              </li>
-              @if(session('privilege')['admin/demorequest']['browse'] ?? 0)<li class=" nav-item"><a href="{{ url('/admin/demorequest') }}"><i class="ft-phone-incoming"></i><span data-i18n="" class="menu-title">Demo Request</span></a></li>@endif
+              @if(session('privilege')[1]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/dashboard') }}"><i class="ft-bar-chart-2"></i><span data-i18n="" class="menu-title">Dashboard</span></a></li>@endif
+              @if(session('privilege')[2]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/event') }}"><i class="ft-calendar"></i><span data-i18n="" class="menu-title">Event</span></a></li>@endif
+              @if(session('privilege')[3]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/invitation') }}"><i class="ft-mail"></i><span data-i18n="" class="menu-title">Invitation</span></a></li>@endif              
+              @if(session('privilege')[4]["browse"] ?? 0)<li><a href="{{ url('/admin/notification') }}" class="menu-item"><i class="ft-alert-octagon"></i>Notification</a></li>@endif
+              @if(session('privilege')[5]["browse"] ?? 0)<li><a href="{{ url('/admin/partner') }}" class="menu-item"><i class="ft-user-check"></i>Partner</a></li>@endif
+              @if(session('privilege')[6]["browse"] ?? 0)<li><a href="{{ url('/admin/user') }}" class="menu-item"><i class="ft-user"></i>User</a></li>@endif
+              @if(session('privilege')[7]["browse"] ?? 0)<li><a href="{{ url('/admin/administrator') }}" class="menu-item"><i class="ft-user-minus"></i>Administrator</a></li>@endif
+              @if(session('privilege')[8]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/announcement') }}"><i class="ft-volume-2"></i><span data-i18n="" class="menu-title">Announcement</span></a></li>@endif
+              @if(session('privilege')[9]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/support') }}"><i class="ft-heart"></i><span data-i18n="" class="menu-title">Support</span></a></li>@endif
+              @if(session('privilege')[10]["browse"] ?? 0)<li><a href="{{ url('/admin/news') }}" class="menu-item"><i class="ft-message-square"></i>News</a></li>@endif
             </ul>
           </div>
         </div>
@@ -135,30 +91,23 @@
               <ul class="navbar-nav">
                 <li class="nav-item mr-2 d-none d-lg-block"><a id="navbar-fullscreen" href="javascript:;" class="nav-link apptogglefullscreen"><i class="ft-maximize font-medium-3 blue-grey darken-4"></i>
                     <p class="d-none">fullscreen</p></a></li>
-                <li class="dropdown nav-item"><a id="ddnotif" href="#" data-toggle="dropdown" class="nav-link position-relative dropdown-toggle"><i class="ft-bell font-medium-3 blue-grey darken-4"></i>
-                <?php
-                // $notif = App\Notification::where('user_to_notify',Auth::user()->id)->get();
-                $notif = App\Notification::get();
-                ?>
-                <span class="notification badge badge-pill badge-danger">{{ ($notif->count()>0)? $notif->count():'' }}</span>
-                  <p class="d-none">Notifications</p></a>
+                <li class="dropdown nav-item"><a id="ddnotif" href="#" data-toggle="dropdown" class="nav-link position-relative dropdown-toggle"><i class="ft-bell font-medium-3 blue-grey darken-4"></i>               
+                <span class="notification badge badge-pill badge-danger">11</span>
+                  <p class="d-none">Notification</p></a>
                   <div class="notification-dropdown dropdown-menu dropdown-menu-right">
                     <div class="noti-list">
-                      @if(!$notif->count())
                       <a class="dropdown-item noti-container py-3 border-bottom border-bottom-blue-grey border-bottom-lighten-4">
                         <span class="noti-wrapper">
                           <span class="noti-text">No new notification.</span>
                         </span>
                       </a>
-                      @endif
-                      @foreach($notif as $noti)
                       <a class="dropdown-item noti-container py-3 border-bottom border-bottom-blue-grey border-bottom-lighten-4">
                         <span class="noti-wrapper">
-                          <span class="noti-title line-height-1 d-block text-bold-400 info">{{ $noti->data['title'] ?? '' }}</span>
-                          <span class="noti-text">{!! nl2br($noti->data['message'])  ?? '' !!}</span>
+                          <span class="noti-title line-height-1 d-block text-bold-400 info">Notification Title</span>
+                          <span class="noti-text">Notification Content</span>
                         </span>
                       </a>
-                      @endforeach
+                    </div>
                   </div>
                 </li>
                 <li class="dropdown nav-item"><a id="dropdownBasic3" href="#" data-toggle="dropdown" class="nav-link position-relative dropdown-toggle"><i class="ft-user font-medium-3 blue-grey darken-4"></i>
@@ -196,7 +145,7 @@
         <!-- BEGIN : Footer-->
         <footer class="footer footer-static footer-light">
         <p class="pull-left clearfix text-muted text-sm-center px-2">
-          <span>Copyright  &copy; 2019 VISLOG - Integrated Advertising Analysis & Monitoring Tools. </span>
+          <span>Copyright  &copy; 2020 MedIn - Media Invitation </span>
           <span style="font-size:6px;">Powered by <a href="http://arfianagus.com/">arfianagus.com</a> </span>
         </p>
         </footer>
@@ -211,8 +160,8 @@
         <h4 class="text-uppercase mb-0 text-bold-400">Theme Customizer</h4>
         <p>Customize &amp; Preview in Real Time</p>
         <hr>
-        <!-- Layout Options-->
-        <h6 class="text-center text-bold-500 mb-3 text-uppercase">Layout Options</h6>
+        <!-- Layout Option-->
+        <h6 class="text-center text-bold-500 mb-3 text-uppercase">Layout Option</h6>
         <div class="layout-switch ml-4">
           <div class="custom-control custom-radio d-inline-block custom-control-inline light-layout">
             <input id="ll-switch" type="radio" name="layout-switch" checked="" class="custom-control-input">
@@ -228,9 +177,9 @@
           </div>
         </div>
         <hr>
-        <!-- Sidebar Options Starts-->
-        <h6 class="text-center text-bold-500 mb-3 text-uppercase sb-options">Sidebar Color Options</h6>
-        <div class="cz-bg-color sb-color-options">
+        <!-- Sidebar Option Starts-->
+        <h6 class="text-center text-bold-500 mb-3 text-uppercase sb-option">Sidebar Color Option</h6>
+        <div class="cz-bg-color sb-color-option">
           <div class="row p-1">
             <div class="col"><span style="width:20px; height:20px;" data-bg-color="pomegranate" class="gradient-pomegranate d-block rounded-circle"></span></div>
             <div class="col"><span style="width:20px; height:20px;" data-bg-color="king-yna" class="gradient-king-yna d-block rounded-circle"></span></div>
@@ -250,9 +199,9 @@
             <div class="col"><span style="width:20px; height:20px;" data-bg-color="danger" class="bg-danger d-block rounded-circle"></span></div>
           </div>
         </div>
-        <!-- Sidebar Options Ends-->
-        <!-- Transparent Layout Bg color Options-->
-        <h6 class="text-center text-bold-500 mb-3 text-uppercase tl-color-options d-none">Background Colors</h6>
+        <!-- Sidebar Option Ends-->
+        <!-- Transparent Layout Bg color Option-->
+        <h6 class="text-center text-bold-500 mb-3 text-uppercase tl-color-option d-none">Background Colors</h6>
         <div class="cz-tl-bg-color d-none">
           <div class="row p-1">
             <div class="col"><span style="width:20px; height:20px;" data-bg-color="hibiscus" class="bg-hibiscus d-block rounded-circle"></span></div>
@@ -351,7 +300,7 @@
       var url = String( document.location.href ).replace( "#", "" );         
       if(url!=='/'){
         $('a.menu-item[href="'+ url +'"]').parent().addClass('active');
-        $('a.menu-item[href="'+ url +'"]').parents('li.has-sub').addClass('open');
+        $('a.menu-item[href="'+ url +'"]').parent('li.has-sub').addClass('open');
       }else{
         $('.home-nav').addClass('active');
       }
@@ -366,7 +315,7 @@
         }
       });
       $('#ddnotif').click(function(){
-        $.ajax( "{{ url('admin/notification/markallread') }}" );
+        // $.ajax( "{{ url('admin/notification/markallread') }}" );
       });
     </script>
     <script>

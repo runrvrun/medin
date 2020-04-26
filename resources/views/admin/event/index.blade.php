@@ -1,13 +1,13 @@
 @extends('admin.layouts.app')
 
 @section('pagetitle')
-    <title>User</title>
+    <title>Events</title>
 @endsection
 
 @section('content')
         <!-- BEGIN : Main Content-->
         <div class="main-content">
-          <div class="content-wrapper"><!-- DOM - jQuery events table -->
+          <div class="content-wrapper">
 <section id="browse-table">
   <div class="row">
     <div class="col-12">
@@ -16,7 +16,7 @@
       @endif
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">User</h4>
+          <h4 class="card-title">Events</h4>
         </div>
         <div class="card-content ">
           <div class="card-body card-dashboard table-responsive">
@@ -45,17 +45,24 @@
         </div>
 @endsection
 @section('pagecss')
-<link rel="stylesheet" type="text/css" href="{{ asset('') }}app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="textcss" href="{{ asset('/app-assets') }}/vendors/css/tables/datatable/datatables.min.css">
+<style>
+.action-badge{
+  position: relative;
+  top: -8px;
+  right: 16px;
+}
+</style>
 @endsection
 @section('pagejs')
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/datatables.min.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/dataTables.buttons.min.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/buttons.flash.min.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/jszip.min.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/pdfmake.min.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/vfs_fonts.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/buttons.html5.min.js" type="text/javascript"></script>
-<script src="{{ asset('') }}app-assets/vendors/js/datatable/buttons.print.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/datatables.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/buttons.flash.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/jszip.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/pdfmake.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/vfs_fonts.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/buttons.html5.min.js" type="text/javascript"></script>
+<script src="{{ asset('/app-assets') }}/vendors/js/datatable/buttons.print.min.js" type="text/javascript"></script>
 <script>
 $(document).ready(function() {
     var resp = false;
@@ -66,12 +73,12 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-          url: '{!! url('admin/user/indexjson') !!}',
-          headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          type: 'POST'
+        url: '{!! url('admin/event/indexjson') !!}',
+        headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
+        type: 'POST'
+      },
         columns: [
           { data: 'id', name: 'checkbox' },
           @foreach($cols as $val)
@@ -89,10 +96,10 @@ $(document).ready(function() {
             {
               text: '<i class="ft-plus"></i> Add New', className: 'buttons-add',
               action: function ( e, dt, node, config ) {
-                  window.location = '{{ url('admin/user/create') }}'
+                  window.location = '{{ url('admin/event/create') }}'
               }
             },  
-            { extend: 'colvis', text: 'Column' },
+            { extend: 'colvis', text: 'Show/Hide' }
         ],
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         columnDefs: [ {
@@ -108,11 +115,16 @@ $(document).ready(function() {
             targets: ['id','created_at','updated_at'],
             visible: false,
             searchable: false,
-        } ]
+        },{
+            targets: ['description','company','phone','email','city','province'],
+            visible: false,
+        } ],
+        fnRowCallback : function(row, data) {
+          // $('td.branch', row).wrapInner('<a title="SPB" href="{{ url('spb') }}?branch_id='+data.id+'" />');
+        }
     });
-    $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .buttons-colvis, .buttons-csvall').addClass('btn btn-outline-primary mr-1');
+    $('.buttons-colvis').addClass('btn btn-outline-primary mr-1');
     $('.buttons-add').addClass('btn mr-1');
-
 });
 </script>
 @endsection

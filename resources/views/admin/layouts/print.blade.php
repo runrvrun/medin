@@ -4,13 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Vislog">
+    <meta name="description" content="MedIn">
     <meta name="keywords" content="advertising">
     <meta name="author" content="ArfianAgus">
     @if (trim($__env->yieldContent('pagetitle')))
     <h1>@yield('pagetitle')</h1>
     @else
-    <title>{{ config('app.name', 'VISLOG') }}</title>
+    <title>{{ config('app.name', 'MedIn') }}</title>
     @endif
     <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('/') }}app-assets/img/ico/apple-icon-60.png">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('/') }}app-assets/img/ico/apple-icon-76.png">

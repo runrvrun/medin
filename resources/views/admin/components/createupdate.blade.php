@@ -84,7 +84,7 @@
                 @endforeach      
               </div>
               <div class="form-actions">
-                <a class="pull-right" href="{{ url($route) }}"><button type="button" class="btn btn-raised btn-warning mr-1">
+                <a class="pull-right" href="{{ route($route.'.index') }}"><button type="button" class="btn btn-raised btn-warning mr-1">
                   <i class="ft-x"></i> Cancel
                 </button></a>
                 <button type="submit" class="pull-left btn btn-raised btn-primary mr-3">

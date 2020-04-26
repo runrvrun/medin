@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Eloquent
+class Role extends Model
 {
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];  
 }

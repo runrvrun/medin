@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use App\User;
 use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Schema;
 use Session;
 use Validator;
 use Hash;
@@ -16,10 +17,39 @@ use Auth;
 class UserController extends Controller
 {
     use Notifiable;
+    private $cols;
     
     public function __construct()
     {
-        //
+        //setup cols
+        $dbcols = Schema::getColumnListing('users');//get all columns from DB
+        foreach($dbcols as $key=>$val){
+            // add bread props
+            $cols[$val] = ['column'=>$val,'dbcolumn'=>$val,
+                'caption'=>ucwords(str_replace('_',' ',$val)),
+                'type' => 'text',
+                'B'=>1,'R'=>1,'E'=>1,'A'=>1,'D'=>1
+            ];
+            // add joined columns, if any
+            if($val == 'role_id'){
+                $cols['role'] = ['column'=>'role','dbcolumn'=>'roles.role',
+                'caption'=>'Role',
+                'type' => 'text',
+                'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
+                ];
+            }
+        } 
+        // modify defaults
+        unset($cols['password']);
+        unset($cols['remember_token']);
+        $cols['role_id']['caption'] = 'role';
+        $cols['role_id']['type'] = 'dropdown';
+        $cols['role_id']['dropdown_model'] = 'App\Role';
+        $cols['role_id']['dropdown_value'] = 'id';
+        $cols['role_id']['dropdown_caption'] = 'role';
+        $cols['role_id']['B'] = 0;
+        
+        $this->cols = $cols;
     }
     /**
      * Display a listing of the resource.
@@ -28,12 +58,51 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('admin.user.index');
+        $cols = $this->cols;        
+        return view('admin.user.index',compact('cols'));
     }
 
     public function indexjson()
     {
-        return datatables(User::get())
+        return datatables(User::select('users.*','role')->join('roles','role_id','roles.id')->where('role_id',2)->get())
+        ->addColumn('action', function ($dt) {
+            return view('admin.user.action',compact('dt'));
+        })
+        ->editColumn('expired_at', function ($user) 
+        {
+            return date('d-m-Y', strtotime($user->expired_at) );
+        })
+        ->toJson();
+    }
+
+    public function partnerindex()
+    {
+        $cols = $this->cols;        
+        return view('admin.user.index',compact('cols'));
+    }
+
+    public function partnerindexjson()
+    {
+        return datatables(User::select('users.*','role')->join('roles','role_id','roles.id')->where('role_id',2)->where('partner_status','Active')->get())
+        ->addColumn('action', function ($dt) {
+            return view('admin.user.action',compact('dt'));
+        })
+        ->editColumn('expired_at', function ($user) 
+        {
+            return date('d-m-Y', strtotime($user->expired_at) );
+        })
+        ->toJson();
+    }
+
+    public function administratorindex()
+    {
+        $cols = $this->cols;        
+        return view('admin.user.index',compact('cols'));
+    }
+
+    public function administratorindexjson()
+    {
+        return datatables(User::select('users.*','role')->join('roles','role_id','roles.id')->where('role_id',1)->get())
         ->addColumn('action', function ($dt) {
             return view('admin.user.action',compact('dt'));
         })
@@ -47,9 +116,9 @@ class UserController extends Controller
     public function csvall()
     {
         $export = User::all();
-        $filename = 'vislog-user.csv';
+        $filename = 'medin-user.csv';
         $temp = 'temp/'.$filename;
-        (new FastExcel($export))->export('temp/vislog-user.csv');
+        (new FastExcel($export))->export('temp/medin-user.csv');
         $headers = [
             'Content-Type: text/csv',
             ];

@@ -1,7 +1,7 @@
 @extends('admin.layouts.print')
 
 @section('pagetitle')
-    <title>Vislog - Dashboard</title>
+    <title>MedIn - Dashboard</title>
 @endsection
 
 @section('content')
@@ -9,9 +9,9 @@
         <div class="main-content">
         <div class="content-wrapper">
 <div class="row bg-brown text-center" style="padding-top:15px;">
-  <div class="col-md-3"><img src="{{ asset('images/vislog-logo-white.png') }}" width="32px" /></div>
+  <div class="col-md-3"><img src="{{ asset('images/medin-white.png') }}" width="32px" /></div>
   <div class="col-md-6 white">
-  <h3>Vislog Dashboard Report</h3>
+  <h3>MedIn Dashboard Report</h3>
   <p>{{ $request->startdate }} - {{ $request->enddate }}</p>
   </div>
 </div>

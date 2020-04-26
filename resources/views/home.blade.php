@@ -5,13 +5,13 @@
 	<meta charset="utf-8">
 	<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-	<title>Vislog | Home</title>
-	<meta name="description" content="Vislog">
+	<title>MedIn | Home</title>
+	<meta name="description" content="MedIn">
 	<meta name="keywords" content="video commercial">
 	<link rel="shortcut icon" href="{{ asset('/') }}/favicon.ico">
 	<link rel="stylesheet" type="text/css" href="{{ asset('startuply') }}/css/custom-animations.css" />
 	<link rel="stylesheet" type="text/css" href="{{ asset('startuply') }}/css/lib/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="{{ asset('startuply') }}/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="{{ asset('startuply') }}/css/style.css?v=3" />
 
 	<!--[if lt IE 9]>
 		<script src="{{ asset('startuply') }}/js/html5shiv.js"></script>
@@ -30,7 +30,7 @@
 			<div class="container">
 				<div class="navigation-brand">
 					<div class="brand-logo">
-						<a href="{{url('/')}}" class="logo">VISLOG</a><a href="{{url('/')}}" class="logo logo-alt">VISLOG</a>
+						<a href="{{url('/')}}" class="logo"></a>
 					</div>
 				</div>
 				<button class="navigation-toggle">
@@ -597,7 +597,7 @@
 			<div class="footer-content row">
 				<div class="col-sm-4 col-xs-12">
 					<div class="logo-wrapper">
-						<img height="31" src="{{ asset('images') }}/vislog-logo-white.png" alt="logo" /> <span style="font-size: 25px;vertical-align: bottom;margin-left: 4px;">VISLOG</span>
+						<img height="31" src="{{ asset('images') }}/medin-white.png" alt="logo" /> <span style="font-size: 25px;vertical-align: bottom;margin-left: 4px;"></span>
 					</div>
 					<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco. Qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco. Nisi ut aliquid ex ea commodi consequatur?</p>
 					<p><strong>John Doeson, Founder</strong>.</p>
@@ -608,14 +608,14 @@
 				<div class="col-sm-3 col-xs-12">
 					<strong class="heading">Our Contacts</strong>
 					<ul class="list-unstyled">
-						<li><span class="icon icon-chat-messages-14"></span><a href="mailto:info@vislog.id">info@vislog.id</a></li>
+						<li><span class="icon icon-chat-messages-14"></span><a href="mailto:info@medin.id">info@medin.id</a></li>
 						<li><span class="icon icon-seo-icons-34"></span>2901 Marmora road, Glassgow, Seattle, WA 98122-1090</li>
 						<li><span class="icon icon-seo-icons-17"></span>1 - 234-456-7980</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-		<div class="copyright">Vislog 2020. All rights reserved.</div>
+		<div class="copyright">MedIn 2020. All rights reserved.</div>
 	</footer>
 
 	<div class="back-to-top"><i class="fa fa-angle-up fa-3x"></i></div>

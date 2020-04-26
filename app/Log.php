@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Log extends Eloquent
+class Log extends Model
 {
-    protected $guarded = ['id'];    
+    protected $fillable = ['user_id','tag','detail'];    
 }

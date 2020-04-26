@@ -8,7 +8,7 @@
     <meta name="description" content="Apex admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
     <meta name="keywords" content="admin template, Apex admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>VISLOG</title>
+    <title>MedIn</title>
     <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('app-assets') }}/img/ico/apple-icon-60.png">
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('app-assets') }}/img/ico/apple-icon-76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('app-assets') }}/img/ico/apple-icon-120.png">
@@ -57,7 +57,7 @@
                   <img src="{{ asset('app-assets') }}/img/gallery/login.png" alt="" class="img-fluid mt-5" width="400" height="230">
                 </div>
                 <div class="col-lg-6 col-md-12 bg-white px-4 pt-3">
-                  <h1 class="mb-2 card-title" style="text-align:center;font-size:35px;"><a href="{{ url('') }}"><img style="display:block" width="32px" src="{{ asset('/images/vislog-logo.png') }}" /> VISLOG</a></h1>
+                  <div style="margin: 20px 0"><a href="{{ url('') }}"><img style="display:block;" height="60px" src="{{ asset('/images/medin.png') }}" /></a></div>
                   <p class="card-text mb-3">
                     Welcome back, please login to your account.
                   </p>
@@ -91,9 +91,9 @@
                     </div>
                   </div>
                   <div class="fg-actions d-flex justify-content-between">
-                    <div class="login-btn">
-                      
-                    </div>
+                  <div class="login-btn">
+                    <a  class="text-decoration-none  btn btn-outline-primary" href="{{ route('register') }}">Register</a>
+                  </div>
                     <div class="recover-pass">
                       <button class="btn btn-primary">
                         <a class="text-decoration-none text-white">Login</a>

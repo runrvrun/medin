@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Vislog'),
+    'name' => env('APP_NAME', 'MedIn'),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -139,7 +139,6 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        // Barryvdh\DomPDF\ServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -167,9 +166,6 @@ return [
          * Package Service Providers...
          */
         // Collective\Html\HtmlServiceProvider::class,
-        Jenssegers\Mongodb\MongodbServiceProvider::class,
-        Jenssegers\Mongodb\Auth\PasswordResetServiceProvider::class,
-        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         /*
          * Application Service Providers...
@@ -210,7 +206,6 @@ return [
         'DB' => Illuminate\Support\Facades\DB::class,
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
-        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,

@@ -419,7 +419,7 @@ input[type=password],
 .fixed-menu .navigation-header.white-dropdown .navigation-bar.navigation-bar-left > li.active:not(.featured) > a,
 .navigation-header.white-header .btn.btn-outline,
 .form-register.form-register-small .form-control {
-	border-color: #804040;
+	border-color: #003685;
 }
 
 .base-clr-bg,
@@ -506,7 +506,7 @@ input[type=submit]:not(.default).btn-outline-color.pressed,
 .color-landing-page .newsletter-section,
 .color-landing-page .feedback-section,
 .color-landing-page .footer {
-	background-color: #804040;
+	background-color: #003685;
 }
 
 .base-clr-txt,
@@ -611,17 +611,17 @@ input[type=submit]:not(.default).btn-no-border.pressed,
 .package-column.featured > .package-detail .btn.btn-outline-color:hover,
 .package-column:hover > .package-detail .btn.btn-outline-color:focus,
 .package-column.featured > .package-detail .btn.btn-outline-color:focus {
-	color: #804040;
+	color: #f14f21;
 }
 
 ::selection {
 	color: #ffffff;
-	background-color: #804040;
+	background-color: #003685;
 }
 
 ::-moz-selection {
 	color: #ffffff;
-	background-color: #804040;
+	background-color: #003685;
 }
 
 .bg-low-poly,
@@ -805,7 +805,7 @@ blockquote:after {
 }
 
 .style-switcher .template-set-color .color.blue {
-	background-color: #804040;
+	background-color: #003685;
 }
 
 .style-switcher .template-set-color .color.berry {
@@ -4433,7 +4433,7 @@ td.cart-list-item-price {
 	background-size: contain;
 	display: block;
 	height: 30px;
-	background-image: url("../../images/vislog-logo.png");
+	background-image: url("../../images/medin.png");
 	background-repeat: no-repeat;
 	background-position: left center;
 	line-height: 30px;
@@ -4443,7 +4443,7 @@ td.cart-list-item-price {
 
 .navigation-header .navigation-brand .brand-logo .logo.logo-alt {
 	display: none;
-	background-image: url("../../images/vislog-logo.png");
+	background-image: url("../../images/medin.png");
 	padding-left: 30px;
 	color: #000;
 	font-size: 1.2em;

@@ -53,6 +53,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'accepttnc' => ['required'],
         ]);
     }
 
@@ -68,11 +69,8 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'Trial',
-            'status' => 1,
-            'expired_at' =>  "2099-12-31",
-            'privileges[period_start]' =>  "2000-01-01",
-            'privileges[period_end]' =>  "2099-12-31"
+            'role' => 'user',
+            'status' => 'Active',
         ]);
     }
 }
