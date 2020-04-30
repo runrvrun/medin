@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
+use DB;
 use Schema;
 use Session;
 use Validator;
@@ -124,6 +125,13 @@ class EventController extends Controller
     {
         $cols = $this->cols;        
         return view('admin.event.createupdate',compact('cols'));
+    }
+    public function createwizard()
+    {
+        $cols = $this->cols;        
+        $cityprov = \App\City::select(DB::raw("CONCAT(city,', ',province) AS cityprov"),'cities.id')
+        ->join('provinces','province_id','provinces.id')->pluck('cityprov','cities.id');
+        return view('admin.event.createwizard',compact('cols','cityprov'));
     }
 
     /**

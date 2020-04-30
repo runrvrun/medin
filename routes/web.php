@@ -13,11 +13,13 @@ Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
     Route::get('/myprofile', 'Admin\UserController@myprofile');
     Route::post('/updateprofile', 'Admin\UserController@updateprofile');
     Route::post('/event/indexjson','Admin\EventController@indexjson');
+    Route::get('/event/createwizard','Admin\EventController@createwizard');
     Route::resource('/event','Admin\EventController');
     Route::post('/invitation/indexjson','Admin\InvitationController@indexjson');
     Route::resource('/invitation','Admin\InvitationController');
     Route::post('/notification/indexjson','Admin\NotificationController@indexjson');
     Route::resource('/notification','Admin\NotificationController');
+    Route::get('/user/getpartners','Admin\UserController@getpartners');
     Route::post('/user/indexjson','Admin\UserController@indexjson');
     Route::resource('/user', 'Admin\UserController');    
     Route::get('/registerpartner','Admin\UserController@registerpartner');

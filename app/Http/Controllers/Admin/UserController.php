@@ -308,4 +308,17 @@ class UserController extends Controller
         $user->update($requestData);
         return redirect('admin/myprofile');
     }
+
+    public function getpartners(Request $request)
+    {
+        $user = User::where('partner_status','active');
+        if(!empty($request->keyword)){
+            $user->where('name','like','%'.$request->keyword.'%');
+            $user->where(function($q) use($request){
+                $q->where('name','like','%'.$request->keyword.'%')
+                  ->orWhere('company','like','%'.$request->keyword.'%');
+            });
+        }
+        return $user->get();
+    }
 }
