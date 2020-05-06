@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use Carbon\Carbon;
 use Schema;
 use Session;
 use Validator;
 use App\Event;
+use App\Invitation;
 
 class EventController extends Controller
 {
@@ -34,13 +36,6 @@ class EventController extends Controller
                 'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
                 ];
             }
-            if($val == 'province_id'){
-                $cols['province'] = ['column'=>'province','dbcolumn'=>'provinces.province',
-                'caption'=>'Province',
-                'type' => 'text',
-                'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
-                ];
-            }
             if($val == 'city_id'){
                 $cols['city'] = ['column'=>'city','dbcolumn'=>'cities.city',
                 'caption'=>'City',
@@ -54,12 +49,6 @@ class EventController extends Controller
         $cols['description']['type'] = 'textarea';
         $cols['status']['type'] = 'enum';
         $cols['status']['enum_values'] = ['New'=>'New','Rejected'=>'Rejected','Ongoing'=>'Ongoing','Canceled'=>'Canceled','Closed'=>'Closed'];
-        $cols['province_id']['caption'] = 'Province';
-        $cols['province_id']['type'] = 'dropdown';
-        $cols['province_id']['dropdown_model'] = 'App\Province';
-        $cols['province_id']['dropdown_value'] = 'id';
-        $cols['province_id']['dropdown_caption'] = 'province';
-        $cols['province_id']['B'] = 0;
         $cols['city_id']['caption'] = 'City';
         $cols['city_id']['type'] = 'dropdown';
         $cols['city_id']['dropdown_model'] = 'App\City';
@@ -88,16 +77,19 @@ class EventController extends Controller
 
     public function indexjson()
     {
-        $query = Event::select('events.*','province','city','name')
-        ->leftJoin('users','user_id','users.id')
-        ->leftJoin('provinces','province_id','provinces.id')
-        ->leftJoin('cities','city_id','cities.id');
+        $query = Event::selectRaw("events.*,city,name, count(invitations.id) as invitation,SUM(CASE 
+        WHEN invitations.status='Confirm' THEN 1
+        ELSE 0
+      END) AS participant")
+        ->leftJoin('invitations','event_id','events.id')
+        ->leftJoin('users','events.user_id','users.id')
+        ->leftJoin('cities','events.city_id','cities.id');
 
         if(Auth::user()->role_id == 2){
-            $query->where('user_id',Auth::user()->id);
+            $query->where('events.user_id',Auth::user()->id);
         }
 
-        return datatables($query
+        return datatables($query->groupBy('events.id')
         )->addColumn('action', function ($dt) {
             return view('admin.event.action',compact('dt'));
         })
@@ -153,6 +145,33 @@ class EventController extends Controller
         return redirect('admin/event');
     }
 
+    public function storewizard(Request $request)
+    {
+        $request->validate([
+            'event' => 'required',
+        ]);
+
+        $requestData = $request->all();
+        $invitation = json_decode($requestData['selected-media-container']);
+        $requestData['user_id'] = Auth::user()->id;
+        $requestData['status'] = 'New';
+        $requestData['datetime'] = Carbon::createFromFormat('l, d M Y g:i A',$request->date.' '.$request->time);
+        unset($requestData['date']);
+        unset($requestData['time']);
+        unset($requestData['selected-media-container']);
+        $event = Event::create($requestData);
+        // insert invitations
+        if(isset($invitation)>0){
+            foreach($invitation as $inv){            
+                Invitation::create(['event_id'=>$event->id,'user_id'=>$inv,'status'=>'Waiting']);
+            }
+        }
+         
+        Session::flash('message', 'Event created'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/event');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -176,6 +195,19 @@ class EventController extends Controller
         $item = Event::find($event->id);
         return view('admin.event.createupdate',compact('cols','item'));
     }
+    public function editwizard($event_id)
+    {
+        $cols = $this->cols;        
+        $item = Event::selectRaw("events.*, CONCAT(city,', ',province) AS cityprov")
+        ->join('cities','city_id','cities.id')
+        ->join('provinces','province_id','provinces.id')
+        ->find($event_id);
+        $invites = Invitation::selectRaw("group_concat(user_id) as invites_id")->where('event_id',$event_id)->groupBy('event_id')->first();
+        $invitation = Invitation::join('users','user_id','users.id')->where('event_id',$event_id)->get();
+        $cityprov = \App\City::select(DB::raw("CONCAT(city,', ',province) AS cityprov"),'cities.id')
+        ->join('provinces','province_id','provinces.id')->pluck('cityprov','cities.id');
+        return view('admin.event.createwizard',compact('cols','item','invitation','invites','cityprov'));
+    }
 
     /**
      * Update the specified resource in storage.
@@ -196,6 +228,31 @@ class EventController extends Controller
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/event');
     }
+    public function updatewizard($event_id,Request $request)
+    {
+        $request->validate([
+            'event' => 'required',
+        ]);
+
+        $requestData = $request->all();
+        $invitation = json_decode($requestData['selected-media-container']);
+        $requestData['datetime'] = Carbon::createFromFormat('l, d M Y g:i A',$request->date.' '.$request->time);
+        unset($requestData['date']);
+        unset($requestData['time']);
+        unset($requestData['selected-media-container']);
+        Event::find($event_id)->update($requestData);
+        // insert invitations
+        Invitation::where('event_id',$event_id)->delete(); // reset all invites for this event
+        if(isset($invitation)>0){
+            foreach($invitation as $inv){            
+                Invitation::create(['event_id'=>$event_id,'user_id'=>$inv,'status'=>'Waiting']);
+            }
+        }
+        Session::flash('message', 'Event updated'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/event');
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -209,5 +266,14 @@ class EventController extends Controller
         Session::flash('message', 'Event removed'); 
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/event');
+    }
+
+    public function getinvitation(Request $request)
+    {
+        return Invitation::join('users','user_id','users.id')->where('event_id',$request->eventid)->get();        
+    }
+    public function getparticipant(Request $request)
+    {
+        return Invitation::join('users','user_id','users.id')->where('event_id',$request->eventid)->where('invitations.status','Confirm')->get();        
     }
 }

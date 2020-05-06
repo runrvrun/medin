@@ -52,7 +52,7 @@
               <button type="button" class="btn btnjoin new">Waiting for approval</button>
               @break
           @case('Rejected')
-              <a href="{{ url('admin/registerpartner') }}">
+              <a href="{{ url('registerpartner') }}">
                   <button type="button" class="btn btnjoin rejected">Rejected</button>
               </a>
               @break

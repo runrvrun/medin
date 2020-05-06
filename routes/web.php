@@ -14,8 +14,15 @@ Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
     Route::post('/updateprofile', 'Admin\UserController@updateprofile');
     Route::post('/event/indexjson','Admin\EventController@indexjson');
     Route::get('/event/createwizard','Admin\EventController@createwizard');
+    Route::post('/event/storewizard','Admin\EventController@storewizard');
+    Route::get('/event/{a}/editwizard','Admin\EventController@editwizard');
+    Route::patch('/event/{a}/updatewizard','Admin\EventController@updatewizard');
+    Route::get('/event/getinvitation','Admin\EventController@getinvitation');
+    Route::get('/event/getparticipant','Admin\EventController@getparticipant');
     Route::resource('/event','Admin\EventController');
     Route::post('/invitation/indexjson','Admin\InvitationController@indexjson');
+    Route::get('/invitation/{a}/accept','Admin\InvitationController@accept');
+    Route::get('/invitation/{a}/reject','Admin\InvitationController@reject');
     Route::resource('/invitation','Admin\InvitationController');
     Route::post('/notification/indexjson','Admin\NotificationController@indexjson');
     Route::resource('/notification','Admin\NotificationController');

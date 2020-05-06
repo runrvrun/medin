@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use App\User;
 use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
+use DB;
 use Schema;
 use Session;
 use Validator;
@@ -201,41 +202,48 @@ class UserController extends Controller
      */
     public function update($userid,Request $request)
     {
+        // dd($request->all());
         $user = User::find($userid);
         $request->validate([
-            'name' => 'required|unique:users,name,'.$user->_id. ',_id',
-            'email' => 'required|unique:users,email,'.$user->_id. ',_id',
+            'name' => 'required',
         ]);
         
         $requestData = $request->all();
-        $date = Carbon::createFromFormat('d/m/Y H:i:s',$requestData['expired_at'].' 00:00:00')->toDateTimeString();
-        $requestData['expired_at'] = new \MongoDB\BSON\UTCDateTime(new \DateTime($date));
         if(!empty($requestData['password'])){
             $requestData['password'] = Hash::make($requestData['password']);
         }else{
             unset($requestData['password']);
         }      
-        if(isset($requestData['status'])){
-            $requestData['status'] = 1;
-        }else{
-            $requestData['status'] = 0;
-        }        
         unset($requestData['_method']);
         unset($requestData['_token']);
-        //add comma at end of privileges. fix for TRANS TV also selected by TRANS on filtering
-        foreach($requestData['privileges'] as $k=>$p){
-            if($k == 'startdate' || $k == 'enddate'){
-                //startdate enddate convert to isodate
-                $date = Carbon::createFromFormat('Y-m-d H:i:s',$requestData['privileges'][$k].' 00:00:00')->toDateTimeString();
-                $requestData['privileges']['iso'.$k] = new \MongoDB\BSON\UTCDateTime(new \DateTime($date));        
-            }elseif(!empty($p) && substr($p,strlen($p)-1) != ';'){
-                //add comma at the end for consistency
-                $requestData['privileges'][$k] .= ';';
-            }
-            $requestData['privileges'][$k] = html_entity_decode($requestData['privileges'][$k]);
+        unset($requestData['registerpartner']);
+        // upload images
+        if ($request->hasFile('avatar')) {
+            // delete old avatar
+            $avatar = $request->file('avatar');
+            $name = $user->id.'_avatar_'.time().'.'.$avatar->getClientOriginalExtension();
+            $destinationPath = 'uploads/avatar';
+            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $requestData['avatar']=$destinationPath.'/'.$name;            
         }
-        // dd($requestData);
-        User::where('_id',$userid)->update($requestData);
+        if ($request->hasFile('id_photo')) {
+            $avatar = $request->file('id_photo');
+            $name = $user->id.'_id_'.time().'.'.$avatar->getClientOriginalExtension();
+            $destinationPath = 'uploads/avatar';
+            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $requestData['id_photo']=$destinationPath.'/'.$name;            
+        }
+        if ($request->hasFile('company_id_photo')) {
+            $avatar = $request->file('company_id_photo');
+            $name = $user->id.'_companyid_'.time().'.'.$avatar->getClientOriginalExtension();
+            $destinationPath = 'uploads/avatar';
+            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $requestData['company_id_photo']=$destinationPath.'/'.$name;            
+        }
+        User::find($userid)->update($requestData);
+        if($request->registerpartner){
+            return view('admin.user.registerpartnerthankyou');
+        }
         Session::flash('message', 'User diubah'); 
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/user');
@@ -258,7 +266,7 @@ class UserController extends Controller
     public function destroymulti(Request $request)
     {
         $ids = htmlentities($request->id);
-        User::whereRaw('_id in ('.$ids.')')->delete();
+        User::whereRaw('id in ('.$ids.')')->delete();
         Session::flash('message', 'User dihapus'); 
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/user');
@@ -309,6 +317,18 @@ class UserController extends Controller
         return redirect('admin/myprofile');
     }
 
+    public function registerpartner()
+    {
+        $cityprov = \App\City::select(DB::raw("CONCAT(city,', ',province) AS cityprov"),'cities.id')
+        ->join('provinces','province_id','provinces.id')->pluck('cityprov','cities.id');
+        return view('admin.user.registerpartner',compact('cityprov'));
+    }
+
+    public function registerpartnerstore(Request $request)
+    {
+        # code...
+    }
+
     public function getpartners(Request $request)
     {
         $user = User::where('partner_status','active');
@@ -316,8 +336,13 @@ class UserController extends Controller
             $user->where('name','like','%'.$request->keyword.'%');
             $user->where(function($q) use($request){
                 $q->where('name','like','%'.$request->keyword.'%')
-                  ->orWhere('company','like','%'.$request->keyword.'%');
+                ->orWhere('company','like','%'.$request->keyword.'%')
+                ->orWhere('media','like','%'.$request->keyword.'%');
             });
+        }
+        if(!empty($request->exclude)){
+            $exclude = json_decode($request->exclude,true);
+            $user->whereNotIn('id',$exclude);
         }
         return $user->get();
     }

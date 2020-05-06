@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Auth;
 use Schema;
 use Session;
 use Validator;
@@ -38,7 +39,12 @@ class AnnouncementController extends Controller
     public function index()
     {
         $cols = $this->cols;        
-        return view('admin.announcement.index',compact('cols'));
+        if(Auth::user()->role == 1){
+            return view('admin.announcement.index',compact('cols'));
+        }else{
+            $item = Announcement::take(10)->orderBy('created_at','DESC')->get();
+            return view('admin.announcement.announcement',compact('item'));
+        }
     }
 
     public function indexjson()

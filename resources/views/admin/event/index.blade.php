@@ -23,7 +23,6 @@
             <table class="table browse-table">
               <thead>
                 <tr>
-                  <th></th>
                   @foreach($cols as $val)
                   @if($val['B'])
                   <th class="{{ $val['column'] }}">@lang($val['caption'])</th>
@@ -44,6 +43,26 @@
           </div>
         </div>
 @endsection
+@section('modal')
+<div class="modal fade text-left show" id="invitation-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel8" style="display: none; padding-right: 17px;" aria-modal="true">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary white">
+        <h4 class="modal-title" id="myModalLabel8"><span id="event-type-modal">Invitation</span> for <span id="event-title-modal"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
 @section('pagecss')
 <link rel="stylesheet" type="textcss" href="{{ asset('/app-assets') }}/vendors/css/tables/datatable/datatables.min.css">
 <style>
@@ -51,6 +70,12 @@
   position: relative;
   top: -8px;
   right: 16px;
+}
+.btn.media-item{
+  padding:5px;
+  width: 154px;
+  margin-bottom: 0;
+  margin-right: 10px;
 }
 </style>
 @endsection
@@ -80,7 +105,6 @@ $(document).ready(function() {
         type: 'POST'
       },
         columns: [
-          { data: 'id', name: 'checkbox' },
           @foreach($cols as $val)
           @if($val['B'])
           { data: '{{ $val['column'] }}', name: '{{ $val['dbcolumn'] }}', className:'{{ $val['column'] }}' },
@@ -132,7 +156,43 @@ $(document).ready(function() {
         }
     });
     $('.buttons-colvis').addClass('btn btn-outline-primary mr-1');
-    $('.buttons-add').addClass('btn mr-1');
+    $('.buttons-add').addClass('btn mr-1');  
+});
+$('body').on('click','.btninvitation',function(){
+  $("#invitation-modal").modal();
+  $("#event-type-modal").html('Invitation');
+  $("#event-title-modal").html($(this).data('event'));
+  $.ajax({
+    url: "{{ url('/admin/event/getinvitation') }}", 
+    data: {eventid: $(this).data('eventid')}, 
+    success: function(result){
+      if(result.length){
+          $('#invitation-modal .modal-body').empty();
+        $.each(result, function(k,v) {
+          $('#invitation-modal .modal-body').append("<button id='"+v.id+"' type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset('/') }}/"+v.avatar+"'></div><div class='name'>"+v.name+"</div><div class='company'><small>["+v.media_type+"] "+v.media+"</small></div></button>");
+        });
+      }else{
+        $('#invitation-modal .modal-body').html('<p>No result found</p>');
+      }
+  }});     
+});
+$('body').on('click','.btnparticipant',function(){
+  $("#invitation-modal").modal();
+  $("#event-type-modal").html('Participant');
+  $("#event-title-modal").html($(this).data('event'));
+  $.ajax({
+    url: "{{ url('/admin/event/getparticipant') }}", 
+    data: {eventid: $(this).data('eventid')}, 
+    success: function(result){
+      if(result.length){
+          $('#invitation-modal .modal-body').empty();
+        $.each(result, function(k,v) {
+          $('#invitation-modal .modal-body').append("<button id='"+v.id+"' type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset('/') }}/"+v.avatar+"'></div><div class='name'>"+v.name+"</div><div class='company'><small>["+v.media_type+"] "+v.media+"</small></div></button>");
+        });
+      }else{
+        $('#invitation-modal .modal-body').html('<p>No result found</p>');
+      }
+  }});     
 });
 </script>
 @endsection

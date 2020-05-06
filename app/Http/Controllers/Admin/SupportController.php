@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Auth;
 use Schema;
 use Session;
 use Validator;
@@ -38,7 +39,12 @@ class SupportController extends Controller
     public function index()
     {
         $cols = $this->cols;        
-        return view('admin.support.index',compact('cols'));
+        if(Auth::user()->role == 1){
+            return view('admin.support.index',compact('cols'));
+        }else{
+            $item = Support::get();
+            return view('admin.support.support',compact('item'));
+        }
     }
 
     public function indexjson()

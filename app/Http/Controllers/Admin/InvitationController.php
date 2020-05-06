@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Auth;
 use Schema;
 use Session;
 use Validator;
@@ -27,7 +28,14 @@ class InvitationController extends Controller
             // add joined columns, if any
             if($val == 'user_id'){
                 $cols['name'] = ['column'=>'name','dbcolumn'=>'users.name',
-                'caption'=>'Name',
+                'caption'=>'Organizer',
+                'type' => 'text',
+                'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
+                ];
+            }
+            if($val == 'event_id'){
+                $cols['event'] = ['column'=>'event','dbcolumn'=>'events.event',
+                'caption'=>'Event',
                 'type' => 'text',
                 'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
                 ];
@@ -46,6 +54,12 @@ class InvitationController extends Controller
                 'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
                 ];
             }
+            $cols['user_id']['B'] = 0;
+            $cols['user_id']['E'] = 0;
+            $cols['user_id']['A'] = 0;
+            $cols['event_id']['B'] = 0;
+            $cols['event_id']['E'] = 0;
+            $cols['event_id']['A'] = 0;
         } 
         // modify defaults        
 
@@ -64,9 +78,13 @@ class InvitationController extends Controller
 
     public function indexjson()
     {
-        return datatables(Invitation::select('invitations.*','name')
-        ->leftJoin('users','user_id','users.id')
-        )->addColumn('action', function ($dt) {
+        $query = Invitation::select('invitations.*','name', 'event')
+        ->leftJoin('events','event_id','events.id')
+        ->leftJoin('users','events.user_id','users.id');
+        if(Auth::user()->role != 1){
+            $query->where('invitations.user_id',Auth::user()->id);
+        }
+        return datatables($query)->addColumn('action', function ($dt) {
             return view('admin.invitation.action',compact('dt'));
         })
         ->toJson();
@@ -168,6 +186,23 @@ class InvitationController extends Controller
     {
         Invitation::destroy($invitation->id);
         Session::flash('message', 'Invitation removed'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/invitation');
+    }
+
+    public function accept($invitation_id)
+    {
+        $invitation = Invitation::where('user_id',Auth::user()->id)->where('id',$invitation_id)->first();
+        $invitation->update(['status'=>'Confirm']);
+        Session::flash('message', 'Invitation confirmed'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/invitation');
+    }
+    public function reject($invitation_id)
+    {
+        $invitation = Invitation::where('user_id',Auth::user()->id)->where('id',$invitation_id)->first();
+        $invitation->update(['status'=>'Unavailable']);
+        Session::flash('message', 'Invitation rejected'); 
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/invitation');
     }
