@@ -62,7 +62,7 @@
               @if(session('privilege')[2]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/event') }}"><i class="ft-calendar"></i><span data-i18n="" class="menu-title">Event</span></a></li>@endif
               @if(session('privilege')[3]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/invitation') }}"><i class="ft-mail"></i><span data-i18n="" class="menu-title">Invitation</span></a></li>@endif              
               @if(session('privilege')[4]["browse"] ?? 0)<li><a href="{{ url('/admin/notification') }}" class="menu-item"><i class="ft-alert-octagon"></i>Notification</a></li>@endif
-              @if(session('privilege')[5]["browse"] ?? 0)<li><a href="{{ url('/admin/partner') }}" class="menu-item"><i class="ft-user-check"></i>Partner</a></li>@endif
+              @if(session('privilege')[5]["browse"] ?? 0)<li><a href="{{ url('/admin/user/partner') }}" class="menu-item"><i class="ft-user-check"></i>Partner</a></li>@endif
               @if(session('privilege')[6]["browse"] ?? 0)<li><a href="{{ url('/admin/user') }}" class="menu-item"><i class="ft-user"></i>User</a></li>@endif
               @if(session('privilege')[7]["browse"] ?? 0)<li><a href="{{ url('/admin/administrator') }}" class="menu-item"><i class="ft-user-minus"></i>Administrator</a></li>@endif
               @if(session('privilege')[8]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/announcement') }}"><i class="ft-volume-2"></i><span data-i18n="" class="menu-title">Announcement</span></a></li>@endif

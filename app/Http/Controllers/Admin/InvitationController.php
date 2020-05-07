@@ -27,8 +27,13 @@ class InvitationController extends Controller
             ];
             // add joined columns, if any
             if($val == 'user_id'){
-                $cols['name'] = ['column'=>'name','dbcolumn'=>'users.name',
+                $cols['organizer'] = ['column'=>'organizer','dbcolumn'=>'a.name',
                 'caption'=>'Organizer',
+                'type' => 'text',
+                'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
+                ];
+                $cols['name'] = ['column'=>'name','dbcolumn'=>'users.name',
+                'caption'=>'partner',
                 'type' => 'text',
                 'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
                 ];
@@ -62,7 +67,8 @@ class InvitationController extends Controller
             $cols['event_id']['A'] = 0;
         } 
         // modify defaults        
-
+        $cols['status']['type'] = 'enum';
+        $cols['status']['enum_values'] = ['Waiting'=>'Waiting','Confirm'=>'Confirm','Unavailable'=>'Unavailable'];        
         $this->cols = $cols;
     }
     /**
@@ -78,10 +84,11 @@ class InvitationController extends Controller
 
     public function indexjson()
     {
-        $query = Invitation::select('invitations.*','name', 'event')
+        $query = Invitation::select('invitations.*','users.name','a.name as organizer', 'event')
         ->leftJoin('events','event_id','events.id')
-        ->leftJoin('users','events.user_id','users.id');
-        if(Auth::user()->role != 1){
+        ->leftJoin('users','invitations.user_id','users.id')
+        ->leftJoin('users as a','events.user_id','a.id');
+        if(Auth::user()->role_id!= 1){
             $query->where('invitations.user_id',Auth::user()->id);
         }
         return datatables($query)->addColumn('action', function ($dt) {

@@ -23,7 +23,6 @@
             <table class="table browse-table">
               <thead>
                 <tr>
-                  <th></th>
                   @foreach($cols as $val)
                   @if($val['B'])
                   <th class="{{ $val['column'] }}">@lang($val['caption'])</th>
@@ -46,6 +45,11 @@
 @endsection
 @section('pagecss')
 <link rel="stylesheet" type="text/css" href="{{ asset('') }}app-assets/vendors/css/tables/datatable/datatables.min.css">
+<style>
+.media{
+  display: table-cell !important;
+}
+</style>
 @endsection
 @section('pagejs')
 <script src="{{ asset('') }}app-assets/vendors/js/datatable/datatables.min.js" type="text/javascript"></script>
@@ -73,7 +77,6 @@ $(document).ready(function() {
           type: 'POST'
         },
         columns: [
-          { data: 'id', name: 'checkbox' },
           @foreach($cols as $val)
           @if($val['B'])
           { data: '{{ $val['column'] }}', name: '{{ $val['dbcolumn'] }}', className:'{{ $val['column'] }}' },
@@ -101,9 +104,9 @@ $(document).ready(function() {
             defaultContent: '',
             orderable: false,
             searchable: false,
-            checkboxes: {
-                'selectRow': true
-            }
+        },{
+            targets: ['address','company_id_photo','avatar','id_no','id_photo','email_verified_at','company_address','city','role'],
+            visible: false,
         },{
             targets: ['id','created_at','updated_at'],
             visible: false,

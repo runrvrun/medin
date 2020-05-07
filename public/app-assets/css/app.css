@@ -2133,7 +2133,7 @@ input[type="button"].btn-block {
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 15rem;
+  min-width: 10rem;
   padding: 0.5rem 0;
   margin: 0.125rem 0 0;
   font-size: 1rem;
@@ -2276,7 +2276,7 @@ input[type="button"].btn-block {
   font-weight: 400;
   color: #212529;
   text-align: inherit;
-  /* white-space: nowrap; */
+  white-space: nowrap;
   background-color: transparent;
   border: 0; }
   .dropdown-item:hover, .dropdown-item:focus {
@@ -4045,7 +4045,7 @@ a.close.disabled {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1550;
+  z-index: 1050;
   display: none;
   width: 100%;
   height: 100%;
@@ -29167,10 +29167,9 @@ button:hover {
 form label {
   color: #75787d;
   font-size: 0.75rem;
-  /* text-transform: uppercase; */
+  text-transform: uppercase;
   letter-spacing: 2px;
-  /* font-weight: 500;  */
-}
+  font-weight: 500; }
 
 form .labelfocus {
   color: #000; }
@@ -32967,7 +32966,7 @@ datetime .form-group {
   width: 400px; }
   .notification-dropdown .noti-list {
     position: relative;
-    max-height: 290px; }
+    height: 290px; }
   .notification-dropdown.dropdown-menu {
     padding: 0; }
   .notification-dropdown .noti-text {
@@ -37898,28 +37897,29 @@ bootstrap table theme
         padding: 0 3px; }
 
 .dropzone {
-  min-height: 250px;
+  min-height: 350px;
   border: 2px dashed #009DA0;
   background: #f5f7fa; }
   .dropzone .dz-message {
-    font-size: 1.2rem;
+    font-size: 2rem;
     position: absolute;
+    top: 50%;
     left: 0;
     width: 100%;
-    height: 90px;
+    height: 300px;
     color: #009DA0;
     text-align: center; }
   .dropzone .dz-message:before {
-    content: "\e9d1";
+    content: "\e94b";
     font-family: 'feather';
-    font-size: 30px;
+    font-size: 80px;
     position: absolute;
-    top: 28px;
-    width: 30px;
-    height: 30px;
+    top: 48px;
+    width: 80px;
+    height: 80px;
     display: inline-block;
     left: 50%;
-    margin-left: -15px;
+    margin-left: -40px;
     line-height: 1;
     z-index: 2;
     color: #009DA0;
@@ -39785,7 +39785,7 @@ Horizontal Timeline
   position: relative;
   display: inline-block;
   width: 100%;
-  padding: 0 0 5px 43px; }
+  padding: 0 0 35px 43px; }
   #timeline.timeline-left .timeline-item:after {
     content: '';
     position: absolute;
@@ -40803,94 +40803,6 @@ input[type="radio"].switch {
   .customizer .cz-tl-bg-color .col span.rounded-circle:hover {
     cursor: pointer; }
 
-.filterer {
-  width: 400px;
-  right: -400px;
-  padding: 0;
-  background-color: #FFF;
-  z-index: 1054;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  height: 100vh;
-  transition: right 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
-  backface-visibility: hidden;
-  border-left: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); }
-  .filterer.open {
-    right: 0; }
-  .filterer .filterer-content {
-    position: relative;
-    height: 100%; }
-  .filterer a.filterer-toggle {
-    background: #FFF;
-    color: #009DA0;
-    display: block;
-    box-shadow: -3px 0px 8px rgba(0, 0, 0, 0.1); }
-  .filterer a.filterer-close {
-    color: #000; }
-  .filterer .filterer-close {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    padding: 7px;
-    width: auto;
-    z-index: 10; }
-  .filterer #rtl-icon {
-    position: absolute;
-    right: -1px;
-    top: 35%;
-    width: 54px;
-    height: 50px;
-    text-align: center;
-    cursor: pointer;
-    line-height: 50px;
-    margin-top: 50px; }
-  .filterer .filterer-toggle {
-    position: absolute;
-    top: 35%;
-    width: 54px;
-    height: 50px;
-    left: -54px;
-    text-align: center;
-    line-height: 50px;
-    cursor: pointer; }
-  .filterer .color-options a {
-    white-space: pre; }
-  .filterer .cz-bg-color {
-    margin: 0 auto; }
-    .filterer .cz-bg-color span:hover {
-      cursor: pointer; }
-    .filterer .cz-bg-color span.white {
-      color: #ddd !important; }
-  .filterer .cz-bg-color .selected,
-  .filterer .cz-tl-bg-color .selected {
-    box-shadow: 0 0 10px 3px #009da0;
-    border: 3px solid #fff; }
-  .filterer .cz-bg-image:hover {
-    cursor: pointer; }
-  .filterer .cz-bg-image img.rounded {
-    border-radius: 1rem !important;
-    border: 2px solid #e6e6e6;
-    height: 100px;
-    width: 50px; }
-    .filterer .cz-bg-image img.rounded.selected {
-      border: 2px solid #FF586B; }
-  .filterer .tl-color-options {
-    display: none; }
-  .filterer .cz-tl-bg-image img.rounded {
-    border-radius: 1rem !important;
-    border: 2px solid #e6e6e6;
-    height: 100px;
-    width: 70px; }
-    .filterer .cz-tl-bg-image img.rounded.selected {
-      border: 2px solid #FF586B; }
-    .filterer .cz-tl-bg-image img.rounded:hover {
-      cursor: pointer; }
-  .filterer .cz-bg-color .col span.rounded-circle:hover,
-  .filterer .cz-tl-bg-color .col span.rounded-circle:hover {
-    cursor: pointer; }
-
 .main-content .color-palette .color-group li {
   list-style-type: none; }
   .main-content .color-palette .color-group li.main-color {
@@ -40936,26 +40848,3 @@ input[type="radio"].switch {
     color: #fff; }
   .main-content .color-palette span.dark {
     color: rgba(0, 0, 0, 0.87); }
-
-
-
-  body.layout-dark.layout-transparent .filterer a, body.layout-dark.layout-transparent .filterer p, body.layout-dark.layout-transparent .filterer span, body.layout-dark.layout-transparent .filterer label, body.layout-dark.layout-transparent .filterer h4, body.layout-dark.layout-transparent .filterer h6, body.layout-dark.layout-transparent .filterer .filterer-close i, body.layout-dark.layout-transparent .filterer .form-control, body.layout-dark.layout-transparent .filterer div {
-      color: #000 !important;
-  }
-  body.layout-dark.layout-transparent .filterer i{
-      color: #000;
-  }
-  .filterer hr, .filterer #daterange i{
-    color: #000 !important;
-    border-color: #000 !important;
-  }
-  body.layout-dark.layout-transparent #daterange span, body.layout-dark.layout-transparent #daterange i, body.layout-dark.layout-transparent div.daterangepicker, body.layout-dark.layout-transparent div.ranges, body.layout-dark.layout-transparent div.calendar-table, body.layout-dark.layout-transparent div.drp-buttons, body.layout-dark.layout-transparent span.drp-selected{
-    color: #000 !important;
-  }
-  body.layout-dark.layout-transparent .filterer .form-control, body.layout-dark .filterer .dropdown-menu {
-      background-color: #fff !important;
-      border-color: #ced4da !important;
-  }
-  .filterer .form-control{
-    border: 1px solid #ced4da !important;
-  }

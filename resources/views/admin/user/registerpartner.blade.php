@@ -30,7 +30,7 @@
             {{ Form::hidden('partner_status','New') }}
             <div class="row">
               <div class="col-md-2">
-                <button type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset(Auth::user()->avatar) }}'></div><div class='name'>{{ Auth::user()->name }}</div><div class='company'><small>[{{ Auth::user()->media_type }}] {{ Auth::user()->media }}</small></div></button>
+                <button type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset(Auth::user()->avatar) }}' style="width:100%"></div><div class='name'>{{ Auth::user()->name }}</div><div class='company'><small>[{{ Auth::user()->media_type }}] {{ Auth::user()->media }}</small></div></button>
               </div>
               <div class="col-md-10">              
                 <h4 class="form-section" style="margin-top:25px"><i class="ft-user"></i> Personal Info</h4>

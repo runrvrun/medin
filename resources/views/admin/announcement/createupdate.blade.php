@@ -21,11 +21,36 @@
           <h4 class="card-title">Add Announcement</h4>
         </div>
         <div class="card-content">
-          @component('admin.components.createupdate',['cols'=>$cols,'item'=>$item ?? null])
-            @slot('route')
-              announcement
-            @endslot
-          @endcomponent          
+        <div class="px-3">
+          @if(isset($item))
+              {{ Form::model($item, ['route' => ['announcement.update', $item->id], 'method' => 'patch']) }}
+          @else
+              {{ Form::open(['route' => 'announcement.store']) }}
+          @endif
+          <div class="form-body">
+          <div class="form-group row">
+            <label class="col-md-3 label-control" for="title">Title</label>
+            <div class="col-md-9">
+            {{ Form::text('title', old('title',$item->title ?? null), array('class' => 'form-control','required')) }}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 label-control" for="description">Announcement</label>
+							<div class="mx-auto col-md-9">
+              {{ Form::textarea('description', old('description',$item->description ?? null), array('class' => 'form-control','id'=>'editor')) }}
+							</div>
+						</div>
+          </div>
+          <div class="form-actions">
+            <a class="pull-right" href="{{ route('announcement.index') }}"><button type="button" class="btn btn-raised btn-warning mr-1">
+              <i class="ft-x"></i> Cancel
+            </button></a>
+            <button type="submit" class="pull-left btn btn-raised btn-primary mr-3">
+              <i class="fa fa-check-square-o"></i> Save
+            </button>                
+          </div>
+        </form>
+        </div>            
         </div>
       </div>
     </div>
@@ -41,6 +66,14 @@
 @endsection
 @section('pagejs')
 <script src="{{ asset('app-assets') }}/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/19.0.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
 <script>
   $(document).ready(function(){
     $("select[name='province_id']").change();
@@ -56,7 +89,9 @@
     $("select[name='user_id']").attr('data-live-search','true');
     $("select[name='user_id']").attr('data-size','4');
     $("select[name='user_id']").selectpicker();
+
   });
+  
   // make city dropdown conditional to province
   $("select[name='province_id']").change(function () {
     var opt = $("option:selected", this);

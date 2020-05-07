@@ -69,12 +69,12 @@ $(document).ready(function() {
 
     $(".app-sidebar").attr("data-background-color", bgColor);
     if (bgColor == "white") {
-      $(".logo-img img").attr("src", "../images/medin-white.png");
+      $(".logo-img img").attr("src", "app-assets/img/logo-dark.png");
     } else {
       if (
-        $(".logo-img img").attr("src") == "../images/medin-white.png"
+        $(".logo-img img").attr("src") == "app-assets/img/logo-dark.png"
       ) {
-        $(".logo-img img").attr("src", "../images/medin-white.png");
+        $(".logo-img img").attr("src", "app-assets/img/logo.png");
       }
     }
   });
@@ -180,7 +180,7 @@ $(document).ready(function() {
       $(".sb-color-options span.selected").removeClass("selected");
       $(".sb-color-options .bg-black").addClass("selected");
       $(".app-sidebar").attr("data-background-color", "black");
-      $(".logo-img img").attr("src", "../images/medin-white.png");
+      $(".logo-img img").attr("src", "app-assets/img/logo.png");
     }
   });
 

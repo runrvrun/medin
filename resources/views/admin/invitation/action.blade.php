@@ -1,4 +1,4 @@
-@if(Auth::user()->role == 1)
+@if(Auth::user()->role_id== 1)
 <form method="POST" action="/admin/invitation/{{$dt->id}}">
 <a href="{{ url('admin/invitation/'.$dt->id.'/edit') }}" class="success p-0" data-original-title="" title="">
         <i class="ft-edit-2 font-medium-3 mr-2"></i>

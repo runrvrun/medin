@@ -17,6 +17,9 @@ Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
     Route::post('/event/storewizard','Admin\EventController@storewizard');
     Route::get('/event/{a}/editwizard','Admin\EventController@editwizard');
     Route::patch('/event/{a}/updatewizard','Admin\EventController@updatewizard');
+    Route::get('/event/{a}/approve','Admin\EventController@approve');
+    Route::get('/event/{a}/reject','Admin\EventController@reject');
+    Route::get('/event/{a}/cancel','Admin\EventController@cancel');
     Route::get('/event/getinvitation','Admin\EventController@getinvitation');
     Route::get('/event/getparticipant','Admin\EventController@getparticipant');
     Route::resource('/event','Admin\EventController');
@@ -27,11 +30,13 @@ Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
     Route::post('/notification/indexjson','Admin\NotificationController@indexjson');
     Route::resource('/notification','Admin\NotificationController');
     Route::get('/user/getpartners','Admin\UserController@getpartners');
+    Route::get('/user/{a}/changepassword','Admin\UserController@changeuserpassword');
     Route::post('/user/indexjson','Admin\UserController@indexjson');
+    Route::get('/user/{a}','Admin\UserController@index');
+    Route::get('/user/partner/review/{a}','Admin\UserController@partnerreview');
+    Route::post('/user/indexjson/{a}','Admin\UserController@indexjson');
     Route::resource('/user', 'Admin\UserController');    
     Route::get('/registerpartner','Admin\UserController@registerpartner');
-    Route::get('/partner','Admin\UserController@partnerindex');
-    Route::post('/partner/indexjson','Admin\UserController@partnerindexjson');
     Route::get('/administrator','Admin\UserController@administratorindex');
     Route::post('/administrator/indexjson','Admin\UserController@administratorindexjson');
     Route::post('/announcement/indexjson','Admin\AnnouncementController@indexjson');

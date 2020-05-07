@@ -86,7 +86,7 @@ $(document).ready(function() {
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         buttons: [
-            @if(Auth::user()->role == 1)
+            @if(Auth::user()->role_id== 1)
             {
               text: '<i class="ft-plus"></i> Add New', className: 'buttons-add',
               action: function ( e, dt, node, config ) {

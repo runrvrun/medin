@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use Carbon\Carbon;
+use Mail;
 use Schema;
 use Session;
 use Validator;
@@ -193,6 +194,9 @@ class EventController extends Controller
     {
         $cols = $this->cols;        
         $item = Event::find($event->id);
+        if($item->user_id != Auth::user()->id && Auth::user()->role_id != 1 ){
+            return redirect('admin/event');
+        }
         return view('admin.event.createupdate',compact('cols','item'));
     }
     public function editwizard($event_id)
@@ -202,6 +206,9 @@ class EventController extends Controller
         ->join('cities','city_id','cities.id')
         ->join('provinces','province_id','provinces.id')
         ->find($event_id);
+        if($item->user_id != Auth::user()->id && Auth::user()->role_id != 1 ){
+            return redirect('admin/event');
+        }
         $invites = Invitation::selectRaw("group_concat(user_id) as invites_id")->where('event_id',$event_id)->groupBy('event_id')->first();
         $invitation = Invitation::join('users','user_id','users.id')->where('event_id',$event_id)->get();
         $cityprov = \App\City::select(DB::raw("CONCAT(city,', ',province) AS cityprov"),'cities.id')
@@ -275,5 +282,96 @@ class EventController extends Controller
     public function getparticipant(Request $request)
     {
         return Invitation::join('users','user_id','users.id')->where('event_id',$request->eventid)->where('invitations.status','Confirm')->get();        
+    }
+
+    public function approve($eventid)
+    {
+        if(Auth::user()->role_id== 1){
+            $data['event'] = Event::find($eventid);
+            $data['event']->update(['status'=>'Ongoing']);
+            // send email to creator
+            try{
+                $to_name = Auth::user()->name;
+                $to_email = Auth::user()->email;
+                $data['fullname'] = Auth::user()->name;
+                    
+                Mail::send('email.event_approved', $data, function($message) use ($to_name, $to_email, $data) {
+                    $message->to($to_email, $to_name)
+                            ->subject('Your Event is Approved! - '.$data['event']->event);
+                    $message->from('noreply@medin.id','MedIn');
+                });
+            }catch(Exception $e){
+                $return = [
+                    'status' => 'Fail sending email'
+                ];
+                return response($return,500);
+            }
+            // send email to invites
+            try{
+                $invites = Invitation::leftJoin('users','user_id','users.id')->where('event_id',$eventid)->get();
+                foreach($invites as $inv){
+                    $to_name = $inv->name;
+                    $to_email = $inv->email;
+                    $data['fullname' ]= $inv->name;
+                    
+                    Mail::send('email.event_invitation', $data, function($message) use ($to_name, $to_email, $data) {
+                        $message->to($to_email, $to_name)
+                        ->subject('Event Invitation: '.$data['event']->event);
+                        $message->from('noreply@medin.id','MedIn');
+                    });
+                }
+            }catch(Exception $e){
+                $return = [
+                    'status' => 'Fail sending email'
+                ];
+                return response($return,500);
+            }
+            Session::flash('message', 'Event approved'); 
+            Session::flash('alert-class', 'alert-success'); 
+            return redirect('admin/event');
+        }
+    }
+    public function reject($eventid)
+    {
+        if(Auth::user()->role_id== 1){
+            $data['event'] = Event::find($eventid);
+            $data['event']->update(['status'=>'Rejected']);
+            // send email to creator
+            try{
+                $to_name = Auth::user()->name;
+                $to_email = Auth::user()->email;
+                $data['fullname'] = Auth::user()->name;
+                    
+                Mail::send('email.event_rejected', $data, function($message) use ($to_name, $to_email, $data) {
+                    $message->to($to_email, $to_name)
+                            ->subject('Your Event is Rejected - '.$data['event']->event);
+                    $message->from('noreply@medin.id','MedIn');
+                });
+            }catch(Exception $e){
+                $return = [
+                    'status' => 'Fail sending email'
+                ];
+                return response($return,500);
+            }
+            Session::flash('message', 'Event rejected'); 
+            Session::flash('alert-class', 'alert-success'); 
+            return redirect('admin/event');
+        }
+    }
+    public function cancel($eventid)
+    {
+        $item = Event::find($eventid);
+        if($item->user_id != Auth::user()->id && Auth::user()->role_id != 1 ){
+            return redirect('admin/event');
+        }
+        if(\Carbon\Carbon::parse($item->datetime)->diffInHours(\Carbon\Carbon::now()) < 2){
+            Session::flash('message', 'Cannot cancel event close to event time.'); 
+            Session::flash('alert-class', 'alert-danger'); 
+            return redirect('admin/event');
+        }
+        $item->update(['status'=>'Canceled']);
+        Session::flash('message', 'Event canceled'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/event');
     }
 }

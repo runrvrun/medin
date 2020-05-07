@@ -39,7 +39,7 @@ class SupportController extends Controller
     public function index()
     {
         $cols = $this->cols;        
-        if(Auth::user()->role == 1){
+        if(Auth::user()->role_id== 1){
             return view('admin.support.index',compact('cols'));
         }else{
             $item = Support::get();

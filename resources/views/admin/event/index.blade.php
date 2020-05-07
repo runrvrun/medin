@@ -64,7 +64,7 @@
 </div>
 @endsection
 @section('pagecss')
-<link rel="stylesheet" type="textcss" href="{{ asset('/app-assets') }}/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('/app-assets') }}/vendors/css/tables/datatable/datatables.min.css">
 <style>
 .action-badge{
   position: relative;
@@ -88,6 +88,7 @@
 <script src="{{ asset('/app-assets') }}/vendors/js/datatable/vfs_fonts.js" type="text/javascript"></script>
 <script src="{{ asset('/app-assets') }}/vendors/js/datatable/buttons.html5.min.js" type="text/javascript"></script>
 <script src="{{ asset('/app-assets') }}/vendors/js/datatable/buttons.print.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script>
 $(document).ready(function() {
     var resp = false;
@@ -139,10 +140,7 @@ $(document).ready(function() {
             data: null,
             defaultContent: '',
             orderable: false,
-            searchable: false,
-            checkboxes: {
-                'selectRow': true
-            }
+            searchable: false,            
         },{
             targets: ['id','created_at','updated_at'],
             visible: false,
@@ -150,7 +148,11 @@ $(document).ready(function() {
         },{
             targets: ['description','company','phone','email','city','province'],
             visible: false,
-        } ],
+        },{
+            targets:['datetime'], render:function(data){
+            return moment(data).format('ddd, DD MMM YYYY');
+        }} 
+        ],
         fnRowCallback : function(row, data) {
           // $('td.branch', row).wrapInner('<a title="SPB" href="{{ url('spb') }}?branch_id='+data.id+'" />');
         }

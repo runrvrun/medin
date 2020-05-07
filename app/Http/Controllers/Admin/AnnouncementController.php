@@ -28,7 +28,7 @@ class AnnouncementController extends Controller
             // add joined columns, if any
         } 
         // modify defaults
-        
+        $cols['description']['type'] = 'textarea';
         $this->cols = $cols;
     }
     /**
@@ -39,7 +39,7 @@ class AnnouncementController extends Controller
     public function index()
     {
         $cols = $this->cols;        
-        if(Auth::user()->role == 1){
+        if(Auth::user()->role_id== 1){
             return view('admin.announcement.index',compact('cols'));
         }else{
             $item = Announcement::take(10)->orderBy('created_at','DESC')->get();
@@ -88,7 +88,6 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'announcement' => 'required',
         ]);
 
         $requestData = $request->all();
@@ -131,8 +130,8 @@ class AnnouncementController extends Controller
      */
     public function update(Request $request, Announcement $announcement)
     {
+        // dd($request->all());
         $request->validate([
-            'announcement' => 'required|unique:announcements,announcement,'.$announcement->id,
         ]);
 
         $requestData = $request->all();

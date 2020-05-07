@@ -1,4 +1,6 @@
-<form method="GET" action="{{ url('admin/user/delete/'.$dt->id) }}">
+<form method="POST" action="{{ url('admin/user/'.$dt->id) }}" style="white-space:nowrap">
+{{ csrf_field() }}
+{{ method_field('DELETE') }}
 <a href="{{ url('admin/user/'.$dt->id.'/edit') }}" class="success p-0" data-original-title="" title="">
         <i class="ft-edit-2 font-medium-3 mr-2"></i>
     </a>

@@ -6,12 +6,21 @@
         <i class="ft-edit-2 font-medium-3 mr-2"></i>
     </a>
 @endif
-<a href="{{ url('admin/event/'.$dt->id.'/editwizard') }}" class="success p-0" data-original-title="" title="">
-        <i class="ft-edit font-medium-3 mr-2"></i>
-    </a>
+<a href="{{ url('admin/event/'.$dt->id.'/editwizard') }}" class="success p-0" data-original-title="" title="Edit Wizard">
+    <i class="ft-edit font-medium-3 mr-2"></i>
+</a>
+@if(Auth::user()->role_id==1)
 {{ csrf_field() }}
 {{ method_field('DELETE') }}
     <a class="danger p-0" onclick="if(confirm('Delete this item?')) this.closest('form').submit()">
         <i class="ft-x font-medium-3 mr-2"></i>
     </a>
+@endif
+<a href="{{ url('admin/event/'.$dt->id.'/cancel') }}" class="danger p-0" data-original-title="" title="Cancel">
+    <i class="ft-slash font-medium-3 mr-2"></i>
+</a>    
 </form>
+@if(Auth::user()->role_id==1 && $dt->status == 'New')
+<a href="{{ url('admin/event/'.$dt->id.'/approve') }}" class="btn btn-success">Approve</a>
+<a href="{{ url('admin/event/'.$dt->id.'/reject') }}" class="btn btn-danger">Reject</a>
+@endif

@@ -14,7 +14,7 @@ $(document).ready( function(){
         headerTag: "h6",
         bodyTag: "fieldset",
         transitionEffect: "fade",
-        titleTemplate: '<span class="step step#index#">#index#</span> #title#',
+        titleTemplate: '<span class="step">#index#</span> #title#',
         labels: {
             finish: 'Submit'
         },

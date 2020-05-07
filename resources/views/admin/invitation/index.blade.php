@@ -23,7 +23,6 @@
             <table class="table browse-table">
               <thead>
                 <tr>
-                  <th></th>
                   @foreach($cols as $val)
                   @if($val['B'])
                   <th class="{{ $val['column'] }}">@lang($val['caption'])</th>
@@ -73,7 +72,6 @@ $(document).ready(function() {
           type: 'POST'
         },
         columns: [
-          { data: 'id', name: 'checkbox' },
           @foreach($cols as $val)
           @if($val['B'])
           { data: '{{ $val['column'] }}', name: '{{ $val['dbcolumn'] }}', className:'{{ $val['column'] }}' },
@@ -85,16 +83,7 @@ $(document).ready(function() {
             "<'row'<'col-sm-12'B>>"+
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-        buttons: [
-            @if(Auth::user()->role == 1)
-            {
-              text: '<i class="ft-plus"></i> Add New', className: 'buttons-add',
-              action: function ( e, dt, node, config ) {
-                  window.location = '{{ url('admin/invitation/create') }}'
-              }
-            },  
-            @endif
-            { extend: 'colvis', text: 'Show/Hide' }
+        buttons: [            
         ],
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         columnDefs: [ {
@@ -103,9 +92,6 @@ $(document).ready(function() {
             defaultContent: '',
             orderable: false,
             searchable: false,
-            checkboxes: {
-                'selectRow': true
-            }
         },{
             targets: ['id','created_at','updated_at'],
             visible: false,
