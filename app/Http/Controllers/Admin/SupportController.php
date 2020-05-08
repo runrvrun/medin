@@ -40,7 +40,8 @@ class SupportController extends Controller
     {
         $cols = $this->cols;        
         if(Auth::user()->role_id== 1){
-            return view('admin.support.index',compact('cols'));
+            $item = Support::get();
+            return view('admin.support.editsupport',compact('item'));
         }else{
             $item = Support::get();
             return view('admin.support.support',compact('item'));
@@ -132,7 +133,7 @@ class SupportController extends Controller
     public function update(Request $request, Support $support)
     {
         $request->validate([
-            'support' => 'required|unique:support,support,'.$support->id,
+            'description' => 'required'
         ]);
 
         $requestData = $request->all();

@@ -21,11 +21,48 @@
           <h4 class="card-title">Add News</h4>
         </div>
         <div class="card-content">
-          @component('admin.components.createupdate',['cols'=>$cols,'item'=>$item ?? null])
-            @slot('route')
-              news
-            @endslot
-          @endcomponent          
+        <div class="px-3">
+          @if(isset($item))
+              {{ Form::model($item, ['route' => ['news.update', $item->id], 'method' => 'patch','enctype'=>'multipart/form-data']) }}
+          @else
+              {{ Form::open(['route' => 'news.store','enctype'=>'multipart/form-data']) }}
+          @endif
+          <div class="form-body">
+          <div class="form-group row">
+            <label class="col-md-3 label-control" for="title">Title</label>
+            <div class="col-md-9">
+            {{ Form::text('title', old('title',$item->title ?? null), array('class' => 'form-control','required')) }}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 label-control" for="content">Content</label>
+							<div class="mx-auto col-md-9">
+              {{ Form::textarea('content', old('content',$item->content ?? null), array('class' => 'form-control','id'=>'editor')) }}
+							</div>
+						</div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 label-control" for="title">Thumbnail</label>
+            <div class="col-md-9">
+            {{ Form::file('featured_image', array('class' => 'form-control')) }}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 label-control" for="title">Images</label>
+            <div class="col-md-9">
+            {{ Form::file('images[]', array('class' => 'form-control', 'multiple'=>'multiple')) }}
+            </div>
+          </div>
+          <div class="form-actions">
+            <a class="pull-right" href="{{ route('announcement.index') }}"><button type="button" class="btn btn-raised btn-warning mr-1">
+              <i class="ft-x"></i> Cancel
+            </button></a>
+            <button type="submit" class="pull-left btn btn-raised btn-primary mr-3">
+              <i class="fa fa-check-square-o"></i> Save
+            </button>                
+          </div>
+        </form>
+        </div>            
         </div>
       </div>
     </div>
@@ -37,36 +74,14 @@
         </div>
 @endsection
 @section('pagecss')
-<link rel="stylesheet" href="{{ asset('app-assets') }}/css/bootstrap-select.min.css">
 @endsection
 @section('pagejs')
-<script src="{{ asset('app-assets') }}/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/19.0.0/classic/ckeditor.js"></script>
 <script>
-  $(document).ready(function(){
-    $("select[name='province_id']").change();
-    // dropdown search with bootstrap select
-    $("select[name='province_id']").attr('data-live-search','true');
-    $("select[name='province_id']").attr('data-size','4');
-    $("select[name='province_id']").selectpicker();
-    $("select[name='city_id']").addClass('selectpicker');
-    $("select[name='city_id']").attr('data-live-search','true');
-    $("select[name='city_id']").attr('data-size','4');
-    $("select[name='city_id']").selectpicker();
-    $("select[name='user_id']").addClass('selectpicker');
-    $("select[name='user_id']").attr('data-live-search','true');
-    $("select[name='user_id']").attr('data-size','4');
-    $("select[name='user_id']").selectpicker();
-  });
-  // make city dropdown conditional to province
-  $("select[name='province_id']").change(function () {
-    var opt = $("option:selected", this);
-    var val = this.value;
-    $("select[name='city_id'] option").hide();
-    $("select[name='city_id'] option[value^='"+ val +"']").show();
-    $("select[name='city_id'] option[value^='"+ val +"']:first").attr('selected','selected');
-    $("select[name='city_id']").attr('data-live-search','true');
-    $("select[name='city_id']").attr('data-size','4');
-    $("select[name='city_id']").selectpicker('refresh');
-  });  
+    ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
 </script>
 @endsection

@@ -30,11 +30,13 @@ class DashboardController extends Controller
         if(Auth::user()->role_id == 1){
             $data['total_event'] = \App\Event::count();
             $data['total_invitation'] = \App\Invitation::count();
-            $data['log'] = \App\Log::orderBy('created_at','DESC')->take(10)->get();
+            $recenttag = ['Event Invite','Event Approved','Event Rejected','Participant Confirm'];
+            $data['log'] = \App\Log::leftJoin('users','user_id','users.id')->whereIn('tag',$recenttag)->orderBy('logs.created_at','DESC')->take(10)->get();
         }else{
             $data['total_event'] = \App\Event::where('user_id',Auth::user()->id)->count();
             $data['total_invitation'] = \App\Invitation::where('user_id',Auth::user()->id)->count();
-            $data['log'] = \App\Log::orderBy('created_at','DESC')->take(10)->get();
+            $recenttag = ['Event Invite','Event Approved','Event Rejected','Participant Confirm'];
+            $data['log'] = \App\Log::whereIn('tag',$recenttag)->where('user_id',Auth::user()->id)->orderBy('created_at','DESC')->take(10)->get();
         }
         if($action == 'print'){
             return view('admin.dashboardprint',compact('request','data'));

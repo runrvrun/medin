@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use Carbon\Carbon;
+use Html;
 use Mail;
 use Schema;
 use Session;
 use Validator;
 use App\Event;
 use App\Invitation;
+use App\Log;
 
 class EventController extends Controller
 {
@@ -289,6 +291,7 @@ class EventController extends Controller
         if(Auth::user()->role_id== 1){
             $data['event'] = Event::find($eventid);
             $data['event']->update(['status'=>'Ongoing']);
+            Log::create(['user_id'=>$data['event']->user_id,'tag'=>'Event Approved','detail'=>'Congratulations! Your event '.Html::link('admin/event',$data['event']->event).' is approved.']);
             // send email to creator
             try{
                 $to_name = Auth::user()->name;
@@ -308,8 +311,9 @@ class EventController extends Controller
             }
             // send email to invites
             try{
-                $invites = Invitation::leftJoin('users','user_id','users.id')->where('event_id',$eventid)->get();
+                $invites = Invitation::select('invitations.*','users.*','events.event')->leftJoin('users','invitations.user_id','users.id')->leftJoin('events','event_id','events.id')->where('event_id',$eventid)->get();
                 foreach($invites as $inv){
+                    Log::create(['user_id'=>$inv->user_id,'tag'=>'Event Invite','detail'=>'You are invited to attend '.Html::link('admin/invitation',$inv->event).'.']);
                     $to_name = $inv->name;
                     $to_email = $inv->email;
                     $data['fullname' ]= $inv->name;
@@ -336,6 +340,7 @@ class EventController extends Controller
         if(Auth::user()->role_id== 1){
             $data['event'] = Event::find($eventid);
             $data['event']->update(['status'=>'Rejected']);
+            Log::create(['user_id'=>$data['event']->user_id,'tag'=>'Event Rejected','detail'=>'Sorry, your event '.Html::link('admin/event',$data['event']->event).' is rejected.']);
             // send email to creator
             try{
                 $to_name = Auth::user()->name;

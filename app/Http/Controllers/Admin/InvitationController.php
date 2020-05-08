@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
+use Html;
 use Schema;
 use Session;
 use Validator;
+use App\Event;
+use App\Log;
 use App\Invitation;
 
 class InvitationController extends Controller
@@ -33,7 +36,7 @@ class InvitationController extends Controller
                 'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
                 ];
                 $cols['name'] = ['column'=>'name','dbcolumn'=>'users.name',
-                'caption'=>'partner',
+                'caption'=>'Partner',
                 'type' => 'text',
                 'B'=>1,'R'=>1,'E'=>0,'A'=>0,'D'=>1
                 ];
@@ -201,6 +204,14 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::where('user_id',Auth::user()->id)->where('id',$invitation_id)->first();
         $invitation->update(['status'=>'Confirm']);
+        $numofconfirm = Invitation::where('event_id',$invitation->event_id)->where('status','Confirm')->count();
+        $numofconfirm = $numofconfirm-1;
+        $event = Event::find($invitation->event_id);
+        if($numofconfirm>0){
+            Log::create(['user_id'=>$event->user_id,'tag'=>'Participant Confirm','detail'=>Auth::user()->name.' and '.$numofconfirm.' other people confirmed to your event '.Html::link('admin/event',$event->event).'.']);
+        }else{
+            Log::create(['user_id'=>$event->user_id,'tag'=>'Participant Confirm','detail'=>Auth::user()->name.' confirmed to your event '.Html::link('admin/event',$event->event).'.']);
+        }
         Session::flash('message', 'Invitation confirmed'); 
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/invitation');

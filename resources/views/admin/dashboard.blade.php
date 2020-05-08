@@ -79,54 +79,32 @@
             <div id="timeline" class="timeline-left timeline-wrapper ml-4 mt-3">
               <ul class="timeline">
                 <li class="timeline-line"></li>
+                @foreach($data['log'] as $val)
                 <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-purple bg-lighten-1"><i class="ft-shopping-cart"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="deep-purple-text medium-small">just now</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jim Doe Purchased new equipments for zonal office.</p>
+                  @switch($val->tag)
+                  @case('Event Invite')
+                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Event Invite" class="bg-info bg-lighten-1"><i class="ft-at-sign"></i></span></div>
+                  @break
+                  @case('Event Approved')
+                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Event Approved" class="bg-success bg-lighten-1"><i class="ft-mic"></i></span></div>
+                  @break
+                  @case('Event Rejected')
+                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Event Rejected" class="bg-danger bg-lighten-1"><i class="ft-mic-off"></i></span></div>
+                  @break
+                  @case('Participant Confirm')
+                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Participant Confirm" class="bg-purple bg-lighten-1"><i class="ft-heart"></i></span></div>
+                  @break
+                  @default
+                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="" class="bg-grey bg-lighten-1"><i class="ft-alert-circle"></i></span></div>
+                  @endswitch
+                  <div class="col s9 recent-activity-list-text"><a href="#" class="deep-purple-text medium-small">{{ \Carbon\Carbon::parse($val->created_at)->diffForHumans() }}</a>
+                    @if(Auth::user()->role_id==1)
+                    <div><small><i class="ft-user"></i> {{ $val->name }} ({{ $val->email }})</small></div>
+                    @endif
+                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">{!! $val->detail !!}</p>
                   </div>
                 </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-info bg-lighten-1"><i class="fa fa-plane"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="cyan-text medium-small">Yesterday</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Your Next flight for USA will be on 15th August 2015.</p>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-success bg-lighten-1"><i class="ft-mic"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="green-text medium-small">5 Days Ago</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-warning bg-lighten-1"><i class="ft-map-pin"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="amber-text medium-small">1 Week Ago</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-red bg-lighten-1"><i class="ft-inbox"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="deep-orange-text medium-small">2 Week Ago</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-cyan bg-lighten-1"><i class="ft-mic"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="brown-text medium-small">1 Month Ago</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Natalya Parker Send you a voice mail for next conference.</p>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-amber bg-lighten-1"><i class="ft-map-pin"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="deep-purple-text medium-small">3 Month Ago</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">Jessy Jay open a new store at S.G Road.</p>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <div class="timeline-badge"><span data-toggle="tooltip" data-placement="right" title="Portfolio project work" class="bg-grey bg-lighten-1"><i class="ft-inbox"></i></span></div>
-                  <div class="col s9 recent-activity-list-text"><a href="#" class="grey-text medium-small">1 Year Ago</a>
-                    <p class="mt-0 mb-2 fixed-line-height font-weight-300 medium-small">voice mail for conference.</p>
-                  </div>
-                </li>
+                @endforeach
               </ul>
             </div>
           </div>

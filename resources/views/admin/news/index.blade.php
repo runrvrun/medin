@@ -23,7 +23,6 @@
             <table class="table browse-table">
               <thead>
                 <tr>
-                  <th></th>
                   @foreach($cols as $val)
                   @if($val['B'])
                   <th class="{{ $val['column'] }}">@lang($val['caption'])</th>
@@ -73,7 +72,6 @@ $(document).ready(function() {
         type: 'POST'
       },
         columns: [
-          { data: 'id', name: 'checkbox' },
           @foreach($cols as $val)
           @if($val['B'])
           { data: '{{ $val['column'] }}', name: '{{ $val['dbcolumn'] }}', className:'{{ $val['column'] }}' },
@@ -105,11 +103,11 @@ $(document).ready(function() {
                 'selectRow': true
             }
         },{
-            targets: ['id','created_at','updated_at'],
+            targets: ['id','updated_at'],
             visible: false,
             searchable: false,
         },{
-            targets: ['description','company','phone','email','city','province'],
+            targets: ['content','featured_image','images'],
             visible: false,
         } ],
         fnRowCallback : function(row, data) {

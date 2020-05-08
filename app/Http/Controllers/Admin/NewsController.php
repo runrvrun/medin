@@ -82,10 +82,29 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'news' => 'required',
+            'title' => 'required',
+            'content' => 'required',
         ]);
 
         $requestData = $request->all();
+        // upload images
+        if ($request->hasFile('featured_image')) {
+            $featured_image = $request->file('featured_image');
+            $name = time().'_'.$featured_image->getClientOriginalName();
+            $destinationPath = 'uploads/news/thumbnail';
+            $featured_image->move(base_path('public/'.$destinationPath), $name);  
+            $requestData['featured_image']=$destinationPath.'/'.$name;            
+        }
+        if (isset($request->images)) {
+            unset($requestData['images']);
+            foreach($request->images as $key=>$val){
+                $name = time().'_'.$val->getClientOriginalName();
+                $destinationPath = 'uploads/news/images';
+                $val->move(base_path('public/'.$destinationPath), $name);  
+                $requestData['images'][]=$destinationPath.'/'.$name;            
+            }
+            $requestData['images'] = json_encode($requestData['images']);
+        }
         News::create($requestData);
         Session::flash('message', 'News added'); 
         Session::flash('alert-class', 'alert-success'); 
@@ -126,7 +145,8 @@ class NewsController extends Controller
     public function update(Request $request, News $news)
     {
         $request->validate([
-            'news' => 'required|unique:news,news,'.$news->id,
+            'title' => 'required',
+            'content' => 'required',
         ]);
 
         $requestData = $request->all();
