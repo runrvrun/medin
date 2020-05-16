@@ -115,8 +115,8 @@
           <div class="card-content">
           <div class="card">            
             <div class="card-content">
-              <div class="card-body">
-                <div id='fc-default'></div>
+              <div class="card-body cal1">
+                <div id="calendar"></div>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@
 </div>
 @endsection
 @section('pagecss')
-<link rel="stylesheet" type="text/css" href="{{asset('app-assets')}}/vendors/css/fullcalendar.min.css">
+<link rel="stylesheet" type="text/css" href="{{asset('css/clndr.css?v=5')}}">
 <style>
 .card-content{
   min-height: 100px;
@@ -190,8 +190,22 @@ table{
 </style>
 @endsection
 @section('pagejs')
+<script src="{{ asset('js') }}/underscore-min.js" type="text/javascript"></script>
 <script src="{{ asset('app-assets') }}/vendors/js/moment.min.js" type="text/javascript"></script>
-<script src="{{ asset('app-assets') }}/vendors/js/fullcalendar.min.js" type="text/javascript"></script>
-<script src="{{ asset('app-assets') }}/vendors/js/jquery-ui.min.js" type="text/javascript"></script>
-<script src="{{ asset('app-assets') }}/js/fullcalendar.js" type="text/javascript"></script>
+<script>
+var clndr = {};
+$(document).ready(function(){  
+  var events = [
+    @foreach($data['event'] as $val)
+    { date: '{{ \Carbon\Carbon::parse($val->datetime)->format('Y-m-d') }}', shortdate: '{{ \Carbon\Carbon::parse($val->datetime)->format('d M') }}', title: '{{ $val->event }}', location: '{{ strtoupper($val->address) }}, {{ $val->cityprov }}', url: '{{ url("admin/invitation") }}' },
+    @endforeach
+  ];
+
+  $('#calendar').clndr({
+    events: events,
+    forceSixRows: true
+  });  
+})
+</script>
+<script src="{{ asset('js') }}/clndr.js?v=2" type="text/javascript"></script>
 @endsection

@@ -91,8 +91,8 @@
               <ul class="navbar-nav">
                 <li class="nav-item mr-2 d-none d-lg-block"><a id="navbar-fullscreen" href="javascript:;" class="nav-link apptogglefullscreen"><i class="ft-maximize font-medium-3 blue-grey darken-4"></i>
                     <p class="d-none">fullscreen</p></a></li>
-                <li class="dropdown nav-item"><a id="ddnotif" href="#" data-toggle="dropdown" class="nav-link position-relative dropdown-toggle"><i class="ft-bell font-medium-3 blue-grey darken-4"></i>               
-                <span class="notification badge badge-pill badge-danger">11</span>
+                <!-- <li class="dropdown nav-item"><a id="ddnotif" href="#" data-toggle="dropdown" class="nav-link position-relative dropdown-toggle"><i class="ft-bell font-medium-3 blue-grey darken-4"></i>                -->
+                <!-- <span class="notification badge badge-pill badge-danger">11</span> -->
                   <p class="d-none">Notification</p></a>
                   <div class="notification-dropdown dropdown-menu dropdown-menu-right">
                     <div class="noti-list">
@@ -115,7 +115,6 @@
                   <div ngbdropdownmenu="" aria-labelledby="dropdownBasic3" class="dropdown-menu text-left dropdown-menu-right">
                   @if (Auth::check()) 
                   <a href="#" class="dropdown-item py-1">Hi, <span>{{ Auth::user()->name }}</span></a>
-                  <a href="{{ url('admin/myprofile') }}" class="dropdown-item py-1"><i class="ft-user"></i> My Profile</a>
                   <a href="{{ url('admin/changepassword') }}" class="dropdown-item py-1"><i class="fa fa-key"></i> Change Password</a>
                   @endif
                   <div class="dropdown-divider"></div>

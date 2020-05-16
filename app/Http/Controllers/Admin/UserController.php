@@ -350,7 +350,7 @@ class UserController extends Controller
                 
         Session::flash('message', 'Password changed'); 
         Session::flash('alert-class', 'alert-success'); 
-        return redirect('admin');
+        return redirect('login');
     
     }
     public function myprofile()

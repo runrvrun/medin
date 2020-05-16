@@ -11,8 +11,8 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('') }}/app-assets/img/ico/apple-icon-76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('') }}/app-assets/img/ico/apple-icon-120.png">
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('') }}/app-assets/img/ico/apple-icon-152.png">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('') }}/app-assets/img/ico/favicon-32.png">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('') }}/app-assets/img/ico/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('') }}/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('') }}/favicon.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -45,8 +45,11 @@
   <div class="container-fluid forgot-password-bg">
     <div class="row full-height-vh m-0 d-flex align-items-center justify-content-center">
       <div class="col-md-7 col-sm-12">
-            <div class="card">
-                <div class="card-header">{{ __('Change Password') }}</div>
+        <div class="card">
+                <div class="card-header" style="text-align:center">
+                <div style="margin: 20px 0 0 260px"><a href="{{ url('') }}"><img style="display:block;" height="60px" src="{{ asset('/images/medin.png') }}" /></a></div>
+                  {{ __('Change Password') }}
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ url('admin/editpassword') }}">
@@ -74,10 +77,15 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-3 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Change Password') }}
                                 </button>
+                            </div>
+                            <div class="col-md-2">
+                            <a href="{{ url('admin') }}"><button type="button" class="btn btn-secondary">
+                                    {{ __('Cancel') }}
+                                </button></a>
                             </div>
                         </div>
                     </form>
