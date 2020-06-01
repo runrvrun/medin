@@ -8,6 +8,9 @@ use App\Role;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Session;
 
 class RegisterController extends Controller
 {
@@ -65,12 +68,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role_id' => '2',
             'status' => 'Active',
         ]);
+
+        $user->sendEmailVerificationNotification();
+
+        return $user;
     }
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        Session::flash('message', 'Please check you inbox, we have sent you an email with a verification link.'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
+    }
+
 }

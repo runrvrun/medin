@@ -90,7 +90,7 @@ class NewsController extends Controller
         // upload images
         if ($request->hasFile('featured_image')) {
             $featured_image = $request->file('featured_image');
-            $name = time().'_'.$featured_image->getClientOriginalName();
+            $name = time().rand(1000,9999).'.'.$featured_image->getClientOriginalExtension();
             $destinationPath = 'uploads/news/thumbnail';
             $featured_image->move(base_path('public/'.$destinationPath), $name);  
             $requestData['featured_image']=$destinationPath.'/'.$name;            
@@ -98,7 +98,7 @@ class NewsController extends Controller
         if (isset($request->images)) {
             unset($requestData['images']);
             foreach($request->images as $key=>$val){
-                $name = time().'_'.$val->getClientOriginalName();
+                $name = time().rand(1000,9999).'.'.$val->getClientOriginalExtension();
                 $destinationPath = 'uploads/news/images';
                 $val->move(base_path('public/'.$destinationPath), $name);  
                 $requestData['images'][]=$destinationPath.'/'.$name;            
@@ -148,8 +148,31 @@ class NewsController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-
         $requestData = $request->all();
+        // upload images
+        $item = News::find($news->id);// get old item to delete old images
+         if ($request->hasFile('featured_image')) {
+            $featured_image = $request->file('featured_image');
+            $name = time().rand(1000,9999).'.'.$featured_image->getClientOriginalExtension();
+            $destinationPath = 'uploads/news/thumbnail';
+            $featured_image->move(base_path('public/'.$destinationPath), $name);  
+            $requestData['featured_image']=$destinationPath.'/'.$name;            
+            @unlink($item->featured_image);// delete old image
+        }
+        if (isset($request->images)) {
+            unset($requestData['images']);
+            foreach($request->images as $key=>$val){
+                $name = time().rand(1000,9999).'.'.$val->getClientOriginalExtension();
+                $destinationPath = 'uploads/news/images';
+                $val->move(base_path('public/'.$destinationPath), $name);  
+                $requestData['images'][]=$destinationPath.'/'.$name;            
+            }
+            $images = json_decode($item->images);
+            foreach($images as $val){
+                @unlink($val);// delete old images
+            }
+            $requestData['images'] = json_encode($requestData['images']);
+        }
         News::find($news->id)->update($requestData);
         Session::flash('message', 'News updated'); 
         Session::flash('alert-class', 'alert-success'); 

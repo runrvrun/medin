@@ -1,7 +1,11 @@
 @extends('admin.layouts.app')
 
 @section('pagetitle')
+    @if(isset($item))
+    <title>Edit News</title>
+    @else
     <title>Add News</title>
+    @endif
 @endsection
 
 @section('content')
@@ -18,7 +22,11 @@
       @endif
       <div class="card">
         <div class="card-header">
+          @if(isset($item))
+          <h4 class="card-title">Edit News</h4>
+          @else
           <h4 class="card-title">Add News</h4>
+          @endif
         </div>
         <div class="card-content">
         <div class="px-3">
@@ -44,12 +52,23 @@
           <div class="form-group row">
             <label class="col-md-3 label-control" for="title">Thumbnail</label>
             <div class="col-md-9">
+            @if(!empty($item->featured_image))
+            <img src="{{ asset($item->featured_image) }}" width="30%"/>
+            @endif
             {{ Form::file('featured_image', array('class' => 'form-control')) }}
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-3 label-control" for="title">Images</label>
             <div class="col-md-9">
+            @if(!empty($item->images))
+            <?php
+              $images = json_decode($item->images);
+            ?>
+            @foreach($images as $val)
+            <img src="{{ asset($val ?? '') }}" width="20%"/>
+            @endforeach
+            @endif
             {{ Form::file('images[]', array('class' => 'form-control', 'multiple'=>'multiple')) }}
             </div>
           </div>

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -16,7 +16,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $guarded = ['id'];
-    // protected $dates = ['expired_at'];
     protected $dates = ['created_at', 'updated_at', 'expired_at'];
 
     /**

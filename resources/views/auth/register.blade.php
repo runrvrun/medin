@@ -71,15 +71,26 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                    <input id="password" placeholder="Password" type="password" class="form-control mb-3 @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                    <div class="input-group" id="show_hide_password">
+                      <input class="form-control @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="new-password" placeholder="Password">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="showpassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                      </div>
+                    </div>
                     @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                    <input id="password-confirm"  placeholder="Confirm Password" type="password" class="form-control mb-3" name="password_confirmation" required autocomplete="new-password">                        
+                    <div class="input-group" id="show_hide_confirmpassword">
+                      <input class="form-control @error('password_confirmation') is-invalid @enderror" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="showconfirmpassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                      </div>
+                    </div>
                   <div class="custom-control custom-checkbox custom-control-inline mb-3">
-                    <input type="checkbox" id="accepttnc" name="accepttnc" class="custom-control-input" value=1 checked required />
+                    <input type="hidden" name="accepttnc" value=1/>
+                    <input type="checkbox" id="accepttnc" class="custom-control-input" value=1 checked disabled />
                     <label class="custom-control-label" for="accepttnc">
                       I accept the terms & conditions.
                     </label>
@@ -138,6 +149,38 @@
     <script src="app-assets/js/customizer.js" type="text/javascript"></script>
     <!-- END APEX JS-->
     <!-- BEGIN PAGE LEVEL JS-->
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#showpassword").on('click', function(event) {
+            event.preventDefault();
+            if($('#show_hide_password input').attr("type") == "text"){
+                $('#show_hide_password input').attr('type', 'password');
+                $('#show_hide_password i').addClass( "fa-eye-slash" );
+                $('#show_hide_password i').removeClass( "fa-eye" );
+            }else if($('#show_hide_password input').attr("type") == "password"){
+                $('#show_hide_password input').attr('type', 'text');
+                $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                $('#show_hide_password i').addClass( "fa-eye" );
+            }
+        });
+    });
+    </script>  
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#showconfirmpassword").on('click', function(event) {
+            event.preventDefault();
+            if($('#show_hide_confirmpassword input').attr("type") == "text"){
+                $('#show_hide_confirmpassword input').attr('type', 'password');
+                $('#show_hide_confirmpassword i').addClass( "fa-eye-slash" );
+                $('#show_hide_confirmpassword i').removeClass( "fa-eye" );
+            }else if($('#show_hide_confirmpassword input').attr("type") == "password"){
+                $('#show_hide_confirmpassword input').attr('type', 'text');
+                $('#show_hide_confirmpassword i').removeClass( "fa-eye-slash" );
+                $('#show_hide_confirmpassword i').addClass( "fa-eye" );
+            }
+        });
+    });
+    </script>
     <!-- END PAGE LEVEL JS-->
   </body>
   <!-- END : Body-->

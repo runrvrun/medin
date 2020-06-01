@@ -49,6 +49,12 @@
       <div class="col-12 d-flex align-items-center justify-content-center">
         <div class="card">
           <div class="card-content">
+      @if(Session::has('message'))
+      <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ ucfirst(Session::get('message')) }}
+      </div>
+      @endif
             <div class="card-body login-img">
             <form method="POST" action="{{ route('userlogin') }}">
             @csrf
@@ -67,7 +73,14 @@
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
-                  <input name="password" type="password" class="form-control mb-1 @error('password') is-invalid @enderror" required autocomplete="current-password" placeholder="Password" />
+                <fieldset>
+                  <div class="input-group" id="show_hide_password">
+                    <input class="form-control @error('password') is-invalid @enderror" type="password" name="password" required autocomplete="current-password" placeholder="Password">
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="showpassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                    </div>
+                  </div>
+                </fieldset>
                   @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -136,6 +149,22 @@
     <script src="{{ asset('app-assets') }}/js/customizer.js" type="text/javascript"></script>
     <!-- END APEX JS-->
     <!-- BEGIN PAGE LEVEL JS-->
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#showpassword").on('click', function(event) {
+            event.preventDefault();
+            if($('#show_hide_password input').attr("type") == "text"){
+                $('#show_hide_password input').attr('type', 'password');
+                $('#show_hide_password i').addClass( "fa-eye-slash" );
+                $('#show_hide_password i').removeClass( "fa-eye" );
+            }else if($('#show_hide_password input').attr("type") == "password"){
+                $('#show_hide_password input').attr('type', 'text');
+                $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                $('#show_hide_password i').addClass( "fa-eye" );
+            }
+        });
+    });
+    </script>
     <!-- END PAGE LEVEL JS-->
   </body>
   <!-- END : Body-->

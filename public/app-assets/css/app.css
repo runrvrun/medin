@@ -28633,9 +28633,9 @@ input:focus ~ .bg-transparent {
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale; }
-  .alert .close {
+  /* .alert .close {
     font-size: 2rem;
-    line-height: 1rem; }
+    line-height: 1rem; } */
   .alert[class*=bg-] {
     color: #fff; }
     .alert[class*=bg-] .alert-link {

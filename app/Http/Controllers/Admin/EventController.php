@@ -152,19 +152,26 @@ class EventController extends Controller
     {
         $request->validate([
             'event' => 'required',
+            'address' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'city_id' => 'required',
         ]);
 
         $requestData = $request->all();
         $invitation = json_decode($requestData['selected-media-container']);
-        $requestData['user_id'] = Auth::user()->id;
+        if(empty($request->user_id)){
+            $requestData['user_id'] = Auth::user()->id;
+        }
         $requestData['status'] = 'New';
         $requestData['datetime'] = Carbon::createFromFormat('l, d M Y g:i A',$request->date.' '.$request->time);
         unset($requestData['date']);
         unset($requestData['time']);
         unset($requestData['selected-media-container']);
+        unset($requestData['quick-filter-media-type']);
         $event = Event::create($requestData);
         // insert invitations
-        if(isset($invitation)>0){
+        if(!empty($invitation[0])){
             foreach($invitation as $inv){            
                 Invitation::create(['event_id'=>$event->id,'user_id'=>$inv,'status'=>'Waiting']);
             }

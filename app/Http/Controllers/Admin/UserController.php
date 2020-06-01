@@ -70,14 +70,21 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($x=null)
+    public function index()
     {
-        if($x=='partner'){
-            $cols = $this->cols;        
-            return view('admin.user.indexpartner',compact('cols'));
-        }
         $cols = $this->cols;        
         return view('admin.user.index',compact('cols'));
+    }
+
+    public function indexpartner()
+    {
+        $cols = $this->cols;
+        unset($cols['id_photo']);  
+        unset($cols['company_id_photo']);  
+        unset($cols['created_at']);  
+        unset($cols['updated_at']);  
+        unset($cols['email_verified_at']);  
+        return view('admin.user.indexpartner',compact('cols'));     
     }
 
     public function indexjson($x=null)
@@ -86,14 +93,6 @@ class UserController extends Controller
         ->join('roles','role_id','roles.id')
         ->leftJoin('cities','city_id','cities.id')
         ->where('role_id',2);
-        if($x=='partner'){
-            $query->whereNotNull('partner_status');
-            return datatables($query->get())
-            ->addColumn('action', function ($dt) {
-                return view('admin.user.actionpartner',compact('dt'));
-            })
-            ->toJson();
-        }
         return datatables($query->get())
         ->addColumn('action', function ($dt) {
             return view('admin.user.action',compact('dt'));
@@ -101,17 +100,27 @@ class UserController extends Controller
         ->toJson();
     }
 
-    public function administratorindex()
+    public function indexpartnerjson($x=null)
     {
-        $cols = $this->cols;        
-        return view('admin.user.index',compact('cols'));
+        $query = User::select('users.*','role','city')
+        ->join('roles','role_id','roles.id')
+        ->leftJoin('cities','city_id','cities.id')
+        ->where('role_id',2)
+        ->whereNotNull('partner_status');
+        return datatables($query->get())
+        ->addColumn('action', function ($dt) {
+            return view('admin.user.actionpartner',compact('dt'));
+        })
+        ->toJson();
     }
 
-    public function administratorindexjson()
+    public function indexadminjson($x=null)
     {
-        return datatables(User::select('users.*','role')->join('roles','role_id','roles.id')->where('role_id',1)->get())
+        $query = User::select('users.*')
+        ->where('role_id',1);
+        return datatables($query->get())
         ->addColumn('action', function ($dt) {
-            return view('admin.user.action',compact('dt'));
+            return view('admin.user.actionadmin',compact('dt'));
         })
         ->toJson();
     }
@@ -252,9 +261,17 @@ class UserController extends Controller
             if(isset($request->approve)){
                 $requestData['partner_status'] = 'Active';
             }
+            if(isset($request->inactive)){
+                $requestData['partner_status'] = 'Inactive';
+            }
+            if(isset($request->active)){
+                $requestData['partner_status'] = 'Active';
+            }
             unset($requestData['partnerreview']);
             unset($requestData['reject']);
             unset($requestData['approve']);
+            unset($requestData['inactive']);
+            unset($requestData['active']);
         }
         unset($requestData['_method']);
         unset($requestData['_token']);
@@ -383,9 +400,11 @@ class UserController extends Controller
             $user->where('name','like','%'.$request->keyword.'%');
             $user->where(function($q) use($request){
                 $q->where('name','like','%'.$request->keyword.'%')
-                ->orWhere('company','like','%'.$request->keyword.'%')
                 ->orWhere('media','like','%'.$request->keyword.'%');
             });
+        }
+        if(!empty($request->mediatype) && $request->mediatype !== 'All'){
+            $user->where('media_type',$request->mediatype);
         }
         if(!empty($request->exclude)){
             $exclude = json_decode($request->exclude,true);
@@ -401,5 +420,26 @@ class UserController extends Controller
         ->join('provinces','province_id','provinces.id')
         ->where('users.id',$user_id)->first();
         return view('admin.user.partnerreview',compact('item'));
+    }
+
+    public function stoppartner()
+    {
+        $user = Auth::user();
+        $user->update(['partner_status'=>null]);
+
+        Session::flash('message', 'You are no longer a Medin partner, you can re-register as partner anytime'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/myprofile');
+    }
+
+    public function deactivate()
+    {
+        $user = Auth::user();
+        $user->update(['partner_status'=>null,'status'=>'Inactive']);
+
+        Session::flush();
+        Session::flash('message', 'Account deactivated. Please contact our admin if you want to reactivate your account'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('/');
     }
 }

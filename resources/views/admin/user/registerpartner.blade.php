@@ -94,7 +94,7 @@
                   <div class="form-group row">
                     <label class="col-md-3 label-control" for="date">Media Type: </label>
                     <div class="col-md-9">
-                    {{ Form::text('media_type', Auth::user()->media_type, array('class' => 'form-control', 'required')) }}
+                    {{ Form::select('media_type',['TV'=>'TV','Radio'=>'Radio','Online'=>'Online','Print'=>'Print','Blogger'=>'Blogger','YouTuber'=>'YouTuber','Selebgram'=>'Selebgram','Influencer'=>'Influencer','Others'=>'Others'], Auth::user()->media_type, array('class' => 'form-control', 'required')) }}
                     </div>
                   </div>
                   <div class="form-group row">

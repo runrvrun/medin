@@ -1,10 +1,11 @@
 <?php
-Auth::routes();
+Auth::routes(['verify' => true]);
 // Auth::routes(['register' => false]);
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('userlogin','Auth\\LoginController@authenticate')->name('userlogin');
-Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
+Route::get('/news/{a}', 'HomeController@singlenews');
+Route::group( ['prefix' => 'admin','middleware' => 'verified' ], function()
 {
     Route::get('/', 'Admin\DashboardController@dashboard');
     Route::get('/dashboard', 'Admin\DashboardController@dashboard');
@@ -12,6 +13,8 @@ Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
     Route::post('/editpassword', 'Admin\UserController@editpassword');
     Route::get('/myprofile', 'Admin\UserController@myprofile');
     Route::post('/updateprofile', 'Admin\UserController@updateprofile');
+    Route::get('/stoppartner', 'Admin\UserController@stoppartner');
+    Route::get('/deactivate', 'Admin\UserController@deactivate');
     Route::post('/event/indexjson','Admin\EventController@indexjson');
     Route::get('/event/createwizard','Admin\EventController@createwizard');
     Route::post('/event/storewizard','Admin\EventController@storewizard');
@@ -27,18 +30,16 @@ Route::group( ['prefix' => 'admin','middleware' => 'auth' ], function()
     Route::get('/invitation/{a}/accept','Admin\InvitationController@accept');
     Route::get('/invitation/{a}/reject','Admin\InvitationController@reject');
     Route::resource('/invitation','Admin\InvitationController');
-    Route::post('/notification/indexjson','Admin\NotificationController@indexjson');
-    Route::resource('/notification','Admin\NotificationController');
     Route::get('/user/getpartners','Admin\UserController@getpartners');
+    Route::get('/user/partner','Admin\UserController@indexpartner');
+    Route::post('/user/indexpartnerjson','Admin\UserController@indexpartnerjson');
     Route::get('/user/{a}/changepassword','Admin\UserController@changeuserpassword');
-    Route::post('/user/indexjson','Admin\UserController@indexjson');
-    Route::get('/user/{a}','Admin\UserController@index');
     Route::get('/user/partner/review/{a}','Admin\UserController@partnerreview');
-    Route::post('/user/indexjson/{a}','Admin\UserController@indexjson');
+    Route::post('/user/indexjson','Admin\UserController@indexjson');
     Route::resource('/user', 'Admin\UserController');    
+    Route::post('/admin/indexjson','Admin\AdminController@indexjson');
+    Route::resource('/admin', 'Admin\AdminController');    
     Route::get('/registerpartner','Admin\UserController@registerpartner');
-    Route::get('/administrator','Admin\UserController@administratorindex');
-    Route::post('/administrator/indexjson','Admin\UserController@administratorindexjson');
     Route::post('/announcement/indexjson','Admin\AnnouncementController@indexjson');
     Route::resource('/announcement','Admin\AnnouncementController');
     Route::post('/support/indexjson','Admin\SupportController@indexjson');

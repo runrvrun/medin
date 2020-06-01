@@ -30,6 +30,8 @@ class DashboardController extends Controller
         if(Auth::user()->role_id == 1){
             $data['total_event'] = \App\Event::count();
             $data['total_invitation'] = \App\Invitation::count();
+            $data['total_user'] = \App\User::where('role_id','<>',1)->where('status','Active')->count();
+            $data['total_partner'] = \App\User::where('role_id','<>',1)->where('partner_status','Active')->where('status','Active')->count();
             $recenttag = ['Event Invite','Event Approved','Event Rejected','Participant Confirm'];
             $data['log'] = \App\Log::leftJoin('users','user_id','users.id')->whereIn('tag',$recenttag)->orderBy('logs.created_at','DESC')->take(10)->get();
             $data['event'] = \App\Event::select('events.*',DB::raw("CONCAT(city,', ',province) AS cityprov"))

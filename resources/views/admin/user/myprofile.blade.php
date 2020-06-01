@@ -14,16 +14,23 @@
 <section id="user-profile">
   <div class="row">
     <div class="col-12">
+  @if(Session::has('message'))
+  <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ ucfirst(Session::get('message')) }}</p>
+  @endif
       <div class="card profile-with-cover">
         <div class="card-img-top img-fluid bg-cover height-300" style="background: url('{{ asset('') }}app-assets/img/photos/14.jpg') 50%;"></div>
         <div class="media profil-cover-details row">
           <div class="col-5">
             <div class="align-self-start halfway-fab pl-3">
               <div class="text-left">
-                <h3 id="txtname" class="card-title white">{{ Auth::user()->name }}</h3>
-                <p id="txttitle" class="card-title white">{{ Auth::user()->title }}</p>
-                <input id="inputname" type="text" name="name" class="form-control" style="display:none" value="{{ Auth::user()->name }}"></input>
-                <input id="inputtitle" type="text" name="title" class="form-control" style="display:none" value="{{ Auth::user()->title }}"></input>
+                <h3 class="card-title white">{{ Auth::user()->name }}</h3>
+                <p class="card-title white"><i>@switch(Auth::user()->partner_status)
+                @case('Active')
+                Medin Partner
+                @break
+                @default
+                {{ Auth::user()->partner_status }}
+                @endswitch</i></p>
               </div>
             </div>
           </div>
@@ -53,9 +60,6 @@
               <ul class="profile-menu no-list-style">
                 <li>
                   <a href="#about" class="primary font-medium-2 font-weight-600">About</a>
-                </li>
-                <li>
-                  <a href="#privileges" class="primary font-medium-2 font-weight-600">Privileges</a>
                 </li>
               </ul>
             </div>
@@ -90,10 +94,42 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-content">
-          <div class="card-body">
+          <div class="card-body"> 
+            <div class="form-group row">
+              <label for="name" class="col-sm-2 col-form-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" name="name" class="form-control" id="inputname" disabled value="{{ Auth::user()->name }}">
+              </div>
+            </div>           
+            <div class="form-group row">
+              <label for="email" class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" disabled id="inputemail" value="{{ Auth::user()->email }}">
+              </div>
+            </div>           
+            <div class="form-group row">
+              <label for="company" class="col-sm-2 col-form-label">Company</label>
+              <div class="col-sm-10">
+                <input type="text" name="company" class="form-control" disabled id="inputcompany" value="{{ Auth::user()->company }}">
+              </div>
+            </div>           
+            <div class="form-group row">
+              <label for="phone" class="col-sm-2 col-form-label">Phone</label>
+              <div class="col-sm-10">
+                <input type="text" name="phone" class="form-control" disabled id="inputphone" value="{{ Auth::user()->phone }}">
+              </div>
+            </div>           
             <div class="mb-3">
               <div id="txtabout" class="overflow-hidden">{!! nl2br(Auth::user()->about) !!}</div>
-              <textarea id="inputabout" name="about" class="form-control" rows=3 style="display:none">{{ Auth::user()->about }}</textarea>
+              <textarea id="inputabout" name="about" class="form-control" rows=3 style="display:none" placeholder="Tell something about you">{{ Auth::user()->about }}</textarea>
+            </div>
+            <div class="mb-3">
+              @if(Auth::user()->partner_status == 'Active')
+              <a id="btnstoppartner" href="{{ url('admin/stoppartner') }}" class="btn btn-warning" style="display:none" onclick="return confirm('Are you sure you want to stop being a Medin partner?')"><i class="ft-camera-off"></i> Stop Partnering</a>
+              @endif
+              @if(Auth::user()->status == 'Active')
+              <a id="btndeactivate" href="{{ url('admin/deactivate') }}" class="btn btn-danger pull-right" style="display:none" onclick="return confirm('Are you sure you want to deactivate your account?')"><i class="ft-slash"></i> Deactivate Account</a>
+              @endif
             </div>
           </div>
         </div>
@@ -103,44 +139,6 @@
 </section>
 <!--About section ends-->
 </form>
-
-<section id="privileges">
-  <div class="row">
-    <div class="col-12">
-      <div class="content-header">Privileges</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <div class="mb-3">
-              <span class="d-block overflow-hidden">
-              @if(!empty(Auth::user()->privileges))
-              @foreach(Auth::user()->privileges as $key=>$val)
-                <div class="row">
-                  @if($key == 'isostartdate' || $key == 'isoenddate'  || $key == 'enddate')
-                    @php continue @endphp
-                  @endif                  
-                  @if($key == 'startdate')
-                  <div class="col-2"><strong>Data period</strong></div>
-                  <div class="col-10">{{ \Carbon\Carbon::createFromFormat('Y-m-d',str_replace(',','',$val))->format('d M Y') }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d',str_replace(',','',Auth::user()->privileges['enddate']))->format('d M Y') }}</div>
-                  @else
-                  <div class="col-2"><strong>{{ ucwords($key) }}</strong></div>
-                  <div class="col-10">{{ ucwords($val ?? "All") }}</div>
-                  @endif
-                </div>
-              @endforeach
-              @endif
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!--User's friend section starts-->
 <section id="history">
@@ -155,7 +153,8 @@
         <div class="card-content">
           <div class="card-body">
             <div class="mb-3">
-              <span class="d-block overflow-hidden">Coming soon...
+              <span class="d-block overflow-hidden">
+              <img src="{{ asset('images/history.jpg') }}" width="100%"/>
               </span>
             </div>
           </div>
@@ -179,7 +178,8 @@
         <div class="card-content">
           <div class="card-body">
             <div class="mb-3">
-              <span class="d-block overflow-hidden">Coming soon...
+              <span class="d-block overflow-hidden">
+              <img src="{{ asset('images/support.jpg') }}" width="100%"/>            
               </span>
             </div>
           </div>
@@ -195,31 +195,35 @@
         </div>
 @endsection
 @section('pagecss')
+<style>
+.title{
+  margin-left: 10px;
+}
+#inputname, #inputphone, #inputcompany, #inputemail{
+  background-color: transparent;
+  border: none;
+}
+.inputborder{
+  border: 1px solid #A6A9AE !important;
+}
+</style>
 @endsection
 @section('pagejs')
 <script>
 $(document).ready(function(){
   $("#btnedit").click(function(){
+    $("#inputname").attr('disabled',false);    
+    $("#inputname").addClass('inputborder');    
+    $("#inputcompany").attr('disabled',false);    
+    $("#inputcompany").addClass('inputborder');    
+    $("#inputphone").attr('disabled',false);    
+    $("#inputphone").addClass('inputborder');    
+    $("#txtabout").hide();
+    $("#inputabout").show();
     $("#btnsave").show();
-    $("#inputname").show();
-    $("#inputtitle").show();
-    $("#inputabout").show();  
-    $(".upload-button").show();
-    $("#btnedit").hide();  
-    $("#txtname").hide();  
-    $("#txttitle").hide();  
-    $("#txtabout").hide();  
-  });
-  $("#btnsave").click(function(){
-    $("#btnsave").hide();  
-    $("#inputname").hide();
-    $("#inputtitle").hide();
-    $("#inputabout").hide();  
-    $(".upload-button").hide();
-    $("#btnedit").show(); 
-    $("#txtname").show();  
-    $("#txttitle").show();
-    $("#txtabout").show();  
+    $("#btnedit").hide();
+    $("#btndeactivate").show();
+    $("#btnstoppartner").show();
   });
 });
 </script>

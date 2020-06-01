@@ -17,6 +17,15 @@
 		<script src="{{ asset('startuply') }}/js/html5shiv.js"></script>
 		<script src="{{ asset('startuply') }}/js/respond.min.js"></script>
 	<![endif]-->
+	<style>
+		.news-title{
+			text-align:center;
+			font-size: 20px !important;
+		}
+		.team-member .socials-block.read-more > li{
+			width:100%;
+		}
+	</style>
 </head>
 
 <body id="landing-page" class="landing-page">
@@ -49,7 +58,7 @@
 						<li><a href="#contact">Contact</a></li>
 						<li id="menu-item-4742" class="dropdown"><a title="EXTRA" class="dropdown-toggle" href="#">Extra <span class="caret"></span></a>
 							<ul role="menu" class=" dropdown-menu" style="display: none;">
-								<li id="menu-item-4743" ><a href="http://med-in.id/" target="_blank">Med-In</a></li>																					
+								<li id="menu-item-4743" ><a href="http://vislog.id/" target="_blank">Vislog</a></li>																					
 								<li id="menu-item-4743" ><a href="https://bitplay.id/" target="_blank">Bitplay</a></li>																					
 								<li id="menu-item-4743" ><a href="http://hitek.co.id/" target="_blank">Hitek</a></li>																					
 								<li id="menu-item-4743" ><a href="http://csigroup.co.id/" target="_blank">CSI</a></li>																					
@@ -64,12 +73,13 @@
 		</nav>
 	</header>
 
-	<div id="hero" class="bg bg1 static-header window-height light-text hero-section ytp-player-background clearfix" data-video="xDQIfx8bB58" data-property="{videoURL: 'https://www.youtube.com/watch?v=xDQIfx8bB58', containment: '#hero', autoPlay: true, realfullscreen: true, stopMovieOnBlur: false, addRaster: false, showControls: false, mute:true, startAt:0, opacity:1, gaTrack: false}">
+	<div id="hero" class="bg bg1 static-header window-height light-text hero-section ytp-player-background clearfix" data-video="PUjmPiPFQBw" data-property="{videoURL: 'https://www.youtube.com/watch?v=PUjmPiPFQBw', containment: '#hero', autoPlay: true, realfullscreen: true, stopMovieOnBlur: false, addRaster: false, showControls: false, mute:true, startAt:0, opacity:1, gaTrack: false}">
 		<div class="heading-bdlock align-center centered-block">
 			<div class="container">
 				<h1 class="editContent">Do not wait &mdash; <span class="highlight">monitor</span> your ads now!</h1>
 				<h5 class="editContent">this tempate is flexible enough to suit any kind of startup or new business</h5>
 				<a href="{{ url('/admin') }}" class="btn btn-solid editContent">Login</a>
+				<a href="{{ url('/register') }}" class="btn btn-solid editContent" style="background-color:#F14F21">Signup</a>
 			</div>
 		</div>
 	</div>
@@ -77,7 +87,7 @@
 	<div id="clients" class="clients-section align-center">
 		<div class="container">
 			<ul class="list-inline logos">
-				<li><a href="http://med-in.id/" target="_blank"><img class="animated" data-animation="fadeInDown" data-duration="500" height="80px" src="{{ asset('images/group') }}/medin.png" alt="mashable" /></a></li>
+				<li><a href="http://vislog.id/" target="_blank"><img class="animated" data-animation="fadeInDown" data-duration="500" height="80px" src="{{ asset('images/group') }}/vislog.png" alt="vislog" /></a></li>
 				<li><a href="https://bitplay.id/" target="_blank"><img class="animated" data-animation="fadeInUp" data-duration="500" height="80px" data-delay="200" src="{{ asset('images/group') }}/bitplay.png" alt="tnw" /></a></li>
 				<li><a href="http://hitek.co.id/" target="_blank"><img class="animated" data-animation="fadeInDown" data-duration="500" height="80px" data-delay="400" src="{{ asset('images/group') }}/hitek.png" alt="virgin" /></a></li>
 				<li><a href="http://csigroup.co.id/" target="_blank"><img class="animated" data-animation="fadeInUp" data-duration="500" height="80px" data-delay="600" src="{{ asset('images/group') }}/csi.png" alt="microsoft" /></a></li>
@@ -314,26 +324,31 @@
 	</section>
 
 	<section id="newsletter" class="long-block newsletter-section light-text">
-		<div class="container align-center">
-			<div class="col-sm-12 col-lg-5 animated" data-animation="fadeInLeft" data-duration="500">
-				<article>
-					<h2>GET LIVE DEMO</h2>
-					 <p class="">No spam promise - only latest news and prices!</p>
-				</article>
-			</div>
-			<div class="col-sm-12 col-lg-7 animated" data-animation="fadeInRight" data-duration="500">
-				<form class="form" style="padding-top: 10px;" action="{{ url('demorequest') }}" method="post">@csrf
-					<div class="form-group form-inline">
-						<input size="15" type="text" class="form-control required" name="name" placeholder="Your name" />
-						<input size="25" type="email" class="form-control required" name="email" placeholder="your@email.com" />
-						<input type="submit" class="btn btn-outline" value="REQUEST DEMO" />
-						@if(Session::has('message'))
-						<p>{{ ucfirst(Session::get('message')) }}</p>
-						@endif
+	<div class="container">
+			<div class="section-content row">
+				@foreach($news as $val)
+				<div class="col-md-3 col-sm-3 col-xs-6 animated" data-animation="fadeInDown" data-duration="500">
+					<div class="team-member">
+						<div class="photo-wrapper">
+							<div class="overlay-wrapper">
+								<img src="assets/img/people/team-1.jpg" alt="">
+								<div class="overlay-content">
+									<div class="text-wrapper">
+										<div class="text-container">
+											<p class="news-title">{{ $val->title }}</p>
+										</div>
+									</div>
+									<ul class="socials-block read-more">
+										<li><a href="{{ url('news/'.$val->id) }}">Read more ...</a></li>										
+									</ul>
+								</div>
+							</div>
+						</div>
 					</div>
-				</form>
+				</div>
+				@endforeach				
 			</div>
-		</div>
+		</div>				
 	</section>
 
 	<section id="pricing" class="section product-section align-center dark-text animated" data-animation="fadeInUp" data-duration="500">
@@ -585,9 +600,6 @@
 					<h2>MONITOR YOUR ADS NOW!</h2>
 					<p class="thin">In his igitur partibus duabus nihil erat, quod Zeno commuta rest gestiret.</p>
 				</article>
-			</div>
-			<div class="col-md-3 col-lg-3">
-				<a href="#newsletter" class="btn btn-outline">GET LIVE DEMO</a>
 			</div>
 		</div>
 	</section>

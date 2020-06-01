@@ -12,7 +12,10 @@
   <div class="row">
     <div class="col-12">
       @if(Session::has('message'))
-      <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ ucfirst(Session::get('message')) }}</p>
+      <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ ucfirst(Session::get('message')) }}
+      </div>
       @endif
       <div class="card">
         <div class="card-header">
@@ -114,7 +117,8 @@ $(document).ready(function() {
         }
     });
     $('.buttons-colvis').addClass('btn btn-outline-primary mr-1');
-    $('.buttons-add').addClass('btn mr-1');
+    $('.buttons-add').addClass('btn btn-primary mr-1');
+    $('.buttons-add').removeClass('btn-secondary');
 });
 </script>
 @endsection

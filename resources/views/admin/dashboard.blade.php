@@ -43,6 +43,42 @@
           </div>
         </div>
       </div>
+      @if(Auth::user()->role_id == 1)
+      <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+        <div class="card gradient-cosmic-fusion">
+          <div class="card-content">
+            <div class="card-body pt-2 pb-0">
+              <div class="media">
+                <div class="media-body white text-left">
+                  <h3 class="font-large-1 mb-0">{{ $data['total_user'] }}</h3>
+                  <span>Total Users</span>
+                </div>
+                <div class="media-right white text-right">
+                  <i class="ft-monitor font-large-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-6 col-12">
+        <div class="card gradient-love-couple">
+          <div class="card-content">
+            <div class="card-body pt-2 pb-0">
+              <div class="media">
+                <div class="media-body white text-left">
+                  <h3 class="font-large-1 mb-0">{{ $data['total_partner'] }}</h3>
+                  <span>Total Partners</span>
+                </div>
+                <div class="media-right white text-right">
+                  <i class="ft-credit-card font-large-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @else
       <div class="col-md-6">
       @switch(Auth::user()->partner_status)
           @case('Active')
@@ -68,6 +104,7 @@
           </a>
       @endswitch        
       </div>  
+      @endif
     </div>
     <div class="row">
       <div class="col-sm-6">

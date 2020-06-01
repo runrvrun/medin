@@ -23,7 +23,7 @@
             <div class="row">
               <div class="col-md-12">
                 <h4 class="card-title">{{ $val->title }}</h4>
-                <p>{{ $val->description }}</p>
+                <p>{!! $val->description !!}</p>
               </div>
             </div>
           </div>

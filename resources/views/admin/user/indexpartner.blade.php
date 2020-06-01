@@ -12,7 +12,10 @@
   <div class="row">
     <div class="col-12">
       @if(Session::has('message'))
-      <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ ucfirst(Session::get('message')) }}</p>
+      <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ ucfirst(Session::get('message')) }}
+      </div>
       @endif
       <div class="card">
         <div class="card-header">
@@ -45,9 +48,34 @@
 @endsection
 @section('pagecss')
 <link rel="stylesheet" type="text/css" href="{{ asset('') }}app-assets/vendors/css/tables/datatable/datatables.min.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css') }}/ekko-lightbox.css">
 <style>
 .media{
   display: table-cell !important;
+}
+.btn.New{
+  color: #fff;
+  background-color: #189fb6;
+  border-color: #189fb6;
+  min-width:85px;
+}
+.btn.Active{
+  color: #fff;
+  background-color: #0CC27E;
+  border-color: #0CC27E;
+  min-width:85px;
+}
+.btn.Rejected{
+  color: #fff;
+  background-color: #FF586B;
+  border-color: #FF586B;
+  min-width:85px;
+}
+.btn.Inactive{
+  color: #fff;
+  background-color: #FF8D60;
+  border-color: #FF8D60;
+  min-width:85px;
 }
 </style>
 @endsection
@@ -60,6 +88,7 @@
 <script src="{{ asset('') }}app-assets/vendors/js/datatable/vfs_fonts.js" type="text/javascript"></script>
 <script src="{{ asset('') }}app-assets/vendors/js/datatable/buttons.html5.min.js" type="text/javascript"></script>
 <script src="{{ asset('') }}app-assets/vendors/js/datatable/buttons.print.min.js" type="text/javascript"></script>
+<script src="{{ asset('js') }}/ekko-lightbox.js" type="text/javascript"></script>
 <script>
 $(document).ready(function() {
     var resp = false;
@@ -89,12 +118,6 @@ $(document).ready(function() {
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         buttons: [
-            {
-              text: '<i class="ft-plus"></i> Add New', className: 'buttons-add',
-              action: function ( e, dt, node, config ) {
-                  window.location = '{{ url('admin/user/create') }}'
-              }
-            },  
             { extend: 'colvis', text: 'Column' },
         ],
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
@@ -105,17 +128,27 @@ $(document).ready(function() {
             orderable: false,
             searchable: false,
         },{
-            targets: ['address','company_id_photo','avatar','id_no','id_photo','email_verified_at','company_address','city','role'],
+            targets: ['address','id_no','email_verified_at','company_address','city','role'],
             visible: false,
         },{
             targets: ['id','created_at','updated_at'],
             visible: false,
             searchable: false,
-        } ]
+        } ],
+        fnRowCallback : function(row, data) {
+          $('td.status', row).wrapInner('<button class="btn '+data.status+'" />');        
+          $('td.partner_status', row).wrapInner('<button class="btn '+data.partner_status+'" />');
+          $('td.avatar', row).wrapInner('<a href="{{ asset('') }}'+data.avatar+'" data-toggle="lightbox" data-max-width="600"><img src="{{ asset('') }}'+data.avatar+'" class="img-fluid"></a>');
+        }
     });
     $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .buttons-colvis, .buttons-csvall').addClass('btn btn-outline-primary mr-1');
-    $('.buttons-add').addClass('btn mr-1');
+    $('.buttons-add').addClass('btn btn-primary mr-1');
+    $('.buttons-add').removeClass('btn-secondary');
 
 });
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox();
+            });
 </script>
 @endsection

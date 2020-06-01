@@ -25,7 +25,7 @@
               <div class="col-md-11">
                 <div class="date">{{ \Carbon\Carbon::parse($val->created_at)->format('l, j M Y') }}</div>                
                 <h4 class="card-title">{{ $val->title }}</h4>
-                <p>{{ $val->description }}</p>
+                <p>{!! $val->description !!}</p>
               </div>
             </div>
           </div>

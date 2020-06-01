@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admin';
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -44,7 +44,8 @@ class LoginController extends Controller
     }
     
     public function authenticate(Request $request)
-    {
+    {        
+        Session::flush();// flush existing session
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();            
             // check active
@@ -72,6 +73,6 @@ class LoginController extends Controller
     }
 
     protected function loggedOut(Request $request) {
-        return redirect('/admin');
+        return redirect('/login');
     }
 }

@@ -98,12 +98,22 @@
                   </div>
                 </div>
                 <div class="form-actions">
+                  @if($item->partner_status == 'New')
                   <button type="submit" name="approve" value=1 class="pull-left btn btn-raised btn-success mr-3">
                     <i class="fa fa-check-square-o"></i> Approve
                   </button>         
                   <button type="submit" name="reject" value=1 class="pull-left btn btn-raised btn-danger mr-3">
                     <i class="ft-x-square"></i> Reject
                   </button>         
+                  @elseif($item->partner_status == 'Inactive')
+                  <button type="submit" name="active" value=1 class="pull-left btn btn-raised btn-success mr-3">
+                    <i class="ft-x"></i> Active
+                  </button>         
+                  @else
+                  <button type="submit" name="inactive" value=1 class="pull-left btn btn-raised btn-danger mr-3">
+                    <i class="ft-x"></i> Inactive
+                  </button>         
+                  @endif
                 </div>
               </div>
             </div>

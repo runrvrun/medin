@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('/') }}app-assets/img/ico/apple-icon-76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('/') }}app-assets/img/ico/apple-icon-120.png">
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('/') }}app-assets/img/ico/apple-icon-152.png">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('').'/favicon.ico' }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -30,7 +30,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/vendors/css/prism.min.css">
     <!-- END VENDOR CSS-->
     <!-- BEGIN APEX CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/css/app.css?v=10">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/css/app.css?v=11">
     <!-- END APEX CSS-->
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css?v=1">
@@ -61,10 +61,9 @@
               @if(session('privilege')[1]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/dashboard') }}"><i class="ft-bar-chart-2"></i><span data-i18n="" class="menu-title">Dashboard</span></a></li>@endif
               @if(session('privilege')[2]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/event') }}"><i class="ft-calendar"></i><span data-i18n="" class="menu-title">Event</span></a></li>@endif
               @if(session('privilege')[3]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/invitation') }}"><i class="ft-mail"></i><span data-i18n="" class="menu-title">Invitation</span></a></li>@endif              
-              @if(session('privilege')[4]["browse"] ?? 0)<li><a href="{{ url('/admin/notification') }}" class="menu-item"><i class="ft-alert-octagon"></i>Notification</a></li>@endif
               @if(session('privilege')[5]["browse"] ?? 0)<li><a href="{{ url('/admin/user/partner') }}" class="menu-item"><i class="ft-user-check"></i>Partner</a></li>@endif
               @if(session('privilege')[6]["browse"] ?? 0)<li><a href="{{ url('/admin/user') }}" class="menu-item"><i class="ft-user"></i>User</a></li>@endif
-              @if(session('privilege')[7]["browse"] ?? 0)<li><a href="{{ url('/admin/administrator') }}" class="menu-item"><i class="ft-user-minus"></i>Administrator</a></li>@endif
+              @if(session('privilege')[7]["browse"] ?? 0)<li><a href="{{ url('/admin/admin') }}" class="menu-item"><i class="ft-user-minus"></i>Administrator</a></li>@endif
               @if(session('privilege')[8]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/announcement') }}"><i class="ft-volume-2"></i><span data-i18n="" class="menu-title">Announcement</span></a></li>@endif
               @if(session('privilege')[9]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/support') }}"><i class="ft-heart"></i><span data-i18n="" class="menu-title">Support</span></a></li>@endif
               @if(session('privilege')[10]["browse"] ?? 0)<li><a href="{{ url('/admin/news') }}" class="menu-item"><i class="ft-message-square"></i>News</a></li>@endif
@@ -115,6 +114,7 @@
                   <div ngbdropdownmenu="" aria-labelledby="dropdownBasic3" class="dropdown-menu text-left dropdown-menu-right">
                   @if (Auth::check()) 
                   <a href="#" class="dropdown-item py-1">Hi, <span>{{ Auth::user()->name }}</span></a>
+                  <a href="{{ url('admin/myprofile') }}" class="dropdown-item py-1"><i class="ft-user"></i> My Profile</a>
                   <a href="{{ url('admin/changepassword') }}" class="dropdown-item py-1"><i class="fa fa-key"></i> Change Password</a>
                   @endif
                   <div class="dropdown-divider"></div>

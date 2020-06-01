@@ -12,7 +12,10 @@
   <div class="row">
     <div class="col-12">
       @if(Session::has('message'))
-      <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ ucfirst(Session::get('message')) }}</p>
+      <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{ ucfirst(Session::get('message')) }}
+      </div>
       @endif
       <div class="card">
         <div class="card-header">
@@ -76,6 +79,36 @@
   width: 154px;
   margin-bottom: 0;
   margin-right: 10px;
+}
+.btn.New{
+  color: #fff;
+  background-color: #189fb6;
+  border-color: #189fb6;
+  min-width:85px;
+}
+.btn.Ongoing{
+  color: #fff;
+  background-color: #0CC27E;
+  border-color: #0CC27E;
+  min-width:85px;
+}
+.btn.Rejected{
+  color: #fff;
+  background-color: #FF586B;
+  border-color: #FF586B;
+  min-width:85px;
+}
+.btn.Canceled{
+  color: #fff;
+  background-color: #FF8D60;
+  border-color: #FF8D60;
+  min-width:85px;
+}
+.btn.Closed{
+  color: #fff;
+  background-color: #868e96;
+  border-color: #868e96
+  min-width:85px;
 }
 </style>
 @endsection
@@ -154,11 +187,12 @@ $(document).ready(function() {
         }} 
         ],
         fnRowCallback : function(row, data) {
-          // $('td.branch', row).wrapInner('<a title="SPB" href="{{ url('spb') }}?branch_id='+data.id+'" />');
+          $('td.status', row).wrapInner('<button class="btn '+data.status+'" />');
         }
     });
     $('.buttons-colvis').addClass('btn btn-outline-primary mr-1');
-    $('.buttons-add').addClass('btn mr-1');  
+    $('.buttons-add').addClass('btn btn-primary mr-1');
+    $('.buttons-add').removeClass('btn-secondary');  
 });
 $('body').on('click','.btninvitation',function(){
   $("#invitation-modal").modal();

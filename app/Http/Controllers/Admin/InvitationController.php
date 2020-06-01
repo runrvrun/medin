@@ -81,6 +81,9 @@ class InvitationController extends Controller
      */
     public function index()
     {
+        if(Auth::user()->partner_status !== 'Active' && Auth::user()->role_id !== 1){
+            return view('admin.invitation.notallowed');            
+        }
         $cols = $this->cols;        
         return view('admin.invitation.index',compact('cols'));
     }
@@ -176,7 +179,7 @@ class InvitationController extends Controller
     public function update(Request $request, Invitation $invitation)
     {
         $request->validate([
-            'invitation' => 'required|unique:invitations,invitation,'.$invitation->id,
+            // 'invitation' => 'required|unique:invitations,invitation,'.$invitation->id,
         ]);
 
         $requestData = $request->all();

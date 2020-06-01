@@ -11,6 +11,11 @@
     <section id="icon-tabs">
       <div class="row">
         <div class="col-12">
+        @if ($errors->any())
+        <p class="alert alert-danger">
+          {!! ucfirst(implode('<br/>', $errors->all(':message'))) !!}
+        </p>
+        @endif
           <div class="card">
             <div class="card-header">
               <h4 class="card-title">{{ isset($item)? 'Edit':'Add'}} Event</h4>
@@ -37,7 +42,7 @@
                         <div class="form-group">
                           <label for="date2">Date and Time</label>
                           <div class='input-group'>
-                            {{ Form::text('date', old('date',\Carbon\Carbon::parse($item->datetime ?? now())->format('l, d M Y')), array('class' => 'form-control','required')) }}
+                            {{ Form::text('date', old('date',\Carbon\Carbon::parse($item->datetime ?? now())->format('l, d M Y')), array('class' => 'form-control pickadate','required')) }}
                             <div class="input-group-append">
                               <span class="input-group-text">
                                 <span class="fa fa-calendar-o"></span>
@@ -45,7 +50,7 @@
                             </div>
                           </div>
                           <div class="input-group">                        
-                            {{ Form::text('time', old('time',\Carbon\Carbon::parse($item->datetime ?? now())->format('g:i A')), array('class' => 'form-control','required')) }}
+                            {{ Form::text('time', old('time',\Carbon\Carbon::parse($item->datetime ?? now())->format('g:i A')), array('class' => 'form-control pickatime','required')) }}
                             <div class="input-group-append">
                               <span class="input-group-text">
                                 <span class="ft-clock"></span>
@@ -65,14 +70,48 @@
                         </div>
                         <div class="form-group">
                           <label for="address">Address</label>
-                          {{ Form::textarea('address', old('address',$item->address ?? null), array('class' => 'form-control','rows'=>5)) }}
+                          {{ Form::textarea('address', old('address',$item->address ?? null), array('class' => 'form-control','rows'=>5,'required')) }}
                         </div>
-                      </div>                  
+                        @if(Auth::user()->role_id == 1)                
+                        <div class="form-group">
+                          <label for="address">Create as User</label>
+                          {{ Form::select('user_id',\App\User::pluck('name','id'),old('user_id',$item->user_id ?? Auth::user()->id),['class'=>'form-control']) }}
+                        </div>
+                        @endif
+                      </div>  
                     </div>
                   </fieldset>
                   <!-- Step 2 -->
                   <h6>MEDIA INVITATION</h6>
                   <fieldset>
+                    <!-- search -->                    
+                    <div class="row" id="search-media">
+                      <div class="input-group row">
+                        <div class="col-sm-3">
+                          <input id="search" type="text" class="form-control" placeholder="Search media partner">
+                        </div>
+                        <div class="col-sm-2">
+                          <span class="input-group-btn">
+                              <button id="btnsearch" class="btn btn-primary" type="button"><span class="ft-search"></span> Search</button>
+                          </span>
+                        </div>
+                        <div class="col-sm-7">
+                          <div class="btn-group quick-filter-media-type" role="group">
+                            <input type="hidden" name="quick-filter-media-type" />
+                            <button type="button" class="btn btn-primary">All</button>
+                            <button type="button" class="btn btn-outline-primary">TV</button>
+                            <button type="button" class="btn btn-outline-primary">Radio</button>
+                            <button type="button" class="btn btn-outline-primary">Online</button>
+                            <button type="button" class="btn btn-outline-primary">Print</button>
+                            <button type="button" class="btn btn-outline-primary">Blogger</button>
+                            <button type="button" class="btn btn-outline-primary">YouTuber</button>
+                            <button type="button" class="btn btn-outline-primary">Selebgram</button>
+                            <button type="button" class="btn btn-outline-primary">Influencer</button>
+                            <button type="button" class="btn btn-outline-primary">Others</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="row">
                       <input type="hidden" name="selected-media-container" value="{{ json_encode(explode(',',$invites->invites_id ?? null)) }}"/>
                       <div id="selected-media-container">  
@@ -81,19 +120,8 @@
                           <button id='{{ $val->id }}' type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset('/') }}/{{ $val->avatar }}'></div><div class='name'>{{ $val->name }}</div><div class='company'><small>[{{ $val->media_type }}] {{ $val->media }}</small></div></button>
                           @endforeach
                         @else
-                        <span class="selected-media-container-placeholder">Search below to start</span>
+                        <span class="selected-media-container-placeholder">Search to start</span>
                         @endif
-                      </div>
-                    </div>
-                    <!-- search -->
-                    <div class="row" id="search-media">
-                      <div class="input-group row">
-                        <div class="col-sm-4">
-                          <input id="search" type="text" class="form-control" placeholder="Search media partner">
-                        </div>
-                          <span class="input-group-btn">
-                              <button id="btnsearch" class="btn btn-primary" type="button"><span class="ft-search"></span> Search</button>
-                          </span>
                       </div>
                     </div>
                       <!-- search result -->
@@ -109,7 +137,7 @@
                     <li class="list-group-item">
                       <div class="row">
                         <div class="col-2 offset-1">Event Name</div>
-                        <div class="col-8 confirman" id="confirm-event">{{ $item->event ?? null }}</div>
+                        <div class="col-8 confirman" id="confirm-event">{{ $item->event ?? old('event',$item->event ?? null) }}</div>
                       </div>
                     </li>
                     <li class="list-group-item">
@@ -201,7 +229,7 @@
   white-space: nowrap;
 }
 #search-media input{
-  width: 314px;
+  width: 252px;
 }
 #search-media{
   margin: 20px 0 10px 12px;
@@ -217,6 +245,9 @@
 }
 .confirman::before{
   content: ": ";
+}
+.quick-filter-media-type button{
+  font-size:12px;
 }
 </style>
 @endsection
@@ -290,10 +321,22 @@
     $("select[name='city_id']").attr('data-size','4');
     $("select[name='city_id']").selectpicker();
     
+    $("select[name='user_id']").addClass('selectpicker');
+    $("select[name='user_id']").attr('data-live-search','true');
+    $("select[name='user_id']").attr('data-size','4');
+    $("select[name='user_id']").selectpicker();
+    
     // change step icon
     $(".step1").html('<i class="ft-calendar"></i>');
     $(".step2").html('<i class="ft-briefcase"></i>');
     $(".step3").html('<i class="ft-check-circle"></i>');
+    
+    $(".quick-filter-media-type").find("button").click(function(){      
+      $("input[name=quick-filter-media-type]").val($(this).text());      
+      $('body').find('#btnsearch').click();
+      $(".quick-filter-media-type").children().attr('class','btn btn-outline-primary');
+      $(this).attr('class','btn btn-primary');
+    })
   });
   
   // search // use delegate from body because originally was hidden and js won't run on hidden  
@@ -305,10 +348,12 @@
   $('body').on('click','#btnsearch',function(){
     if($('#search').val().length>2){
       $('#media-container').empty();
+      $(".selected-media-container-placeholder").empty();
       $.ajax({
         url: "{{ url('admin/user/getpartners') }}", 
         data: {
           keyword: $('#search').val(),
+          mediatype: $('input[name=quick-filter-media-type]').val(),
           exclude: $('input[name=selected-media-container]').val()
         }, 
         success: function(result){
@@ -317,10 +362,12 @@
               $('#media-container').append("<button id='"+v.id+"' type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset('/') }}/"+v.avatar+"'></div><div class='name'>"+v.name+"</div><div class='company'><small>["+v.media_type+"] "+v.media+"</small></div></button>");
             });
           }else{
-            $('#media-container').html('<p>No result found</p>');
+            $('#media-container').html('<p>No result found.</p>');
           }
         }
       });
+    }else{
+      $('#media-container').html('<p style="color:#aaa">Please enter at least 3 characters.</p>');
     }
   });
   // click result, add to selected  

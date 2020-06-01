@@ -15,7 +15,10 @@
     </div>
   </div>
   @if(Session::has('message'))
-  <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ ucfirst(Session::get('message')) }}</p>
+  <div class="alert {{ Session::get('alert-class', 'alert-info') }} alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ ucfirst(Session::get('message')) }}
+  </div>
   @endif  
   @if ($errors->any())
   <p class="alert alert-danger">
