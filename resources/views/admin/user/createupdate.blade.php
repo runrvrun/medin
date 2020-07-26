@@ -152,4 +152,13 @@ button.media-item{
 </style>
 @endsection
 @section('pagejs')
+<script src="{{ asset('app-assets') }}/js/bootstrap-select.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("select[name='city_id']").addClass('selectpicker');
+    $("select[name='city_id']").attr('data-live-search','true');
+    $("select[name='city_id']").attr('data-size','4');
+    $("select[name='city_id']").selectpicker();
+  });
+</script>
 @endsection

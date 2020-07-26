@@ -33133,8 +33133,7 @@ datetime .form-group {
   .off-canvas-sidebar .logo-img {
     width: 30px;
     display: inline-block;
-    max-height: 30px;
-    margin-right: 15px; }
+    max-height: 30px;}
   .app-sidebar .logo-tim,
   .off-canvas-sidebar .logo-tim {
     border-radius: 50%;

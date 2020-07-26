@@ -52,6 +52,36 @@
 .media{
   display: table-cell !important;
 }
+.btn.New{
+  color: #fff;
+  background-color: #189fb6;
+  border-color: #189fb6;
+  min-width:85px;
+}
+.btn.Active{
+  color: #fff;
+  background-color: #0CC27E;
+  border-color: #0CC27E;
+  min-width:85px;
+}
+.btn.Rejected{
+  color: #fff;
+  background-color: #FF586B;
+  border-color: #FF586B;
+  min-width:85px;
+}
+.btn.Inactive{
+  color: #fff;
+  background-color: #FF8D60;
+  border-color: #FF8D60;
+  min-width:85px;
+}
+.btn.Pending{
+  color: #fff;
+  background-color: #400080;
+  border-color: #400080;
+  min-width:85px;
+}
 </style>
 @endsection
 @section('pagejs')
@@ -114,7 +144,12 @@ $(document).ready(function() {
             targets: ['id','created_at','updated_at'],
             visible: false,
             searchable: false,
-        } ]
+        } ],
+        fnRowCallback : function(row, data) {
+          $('td.status', row).wrapInner('<button class="btn '+data.status+'" />');        
+          $('td.partner_status', row).wrapInner('<button class="btn '+data.partner_status+'" />');
+          $('td.avatar', row).wrapInner('<a href="{{ asset('') }}'+data.avatar+'" data-toggle="lightbox" data-max-width="600"><img src="{{ asset('') }}'+data.avatar+'" class="img-fluid"></a>');
+        }
     });
     $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .buttons-colvis, .buttons-csvall').addClass('btn btn-outline-primary mr-1');
     $('.buttons-add').addClass('btn btn-primary mr-1');

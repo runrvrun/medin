@@ -77,20 +77,20 @@ class RegisterController extends Controller
             'status' => 'Active',
         ]);
 
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
 
         return $user;
     }
-    public function register(Request $request)
-    {
-        $this->validator($request->all())->validate();
+    // public function register(Request $request)
+    // {
+    //     $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+    //     event(new Registered($user = $this->create($request->all())));
 
-        Session::flash('message', 'Please check you inbox, we have sent you an email with a verification link.'); 
-        Session::flash('alert-class', 'alert-success'); 
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
-    }
+    //     Session::flash('message', 'Please check you inbox, we have sent you an email with a verification link.'); 
+    //     Session::flash('alert-class', 'alert-success'); 
+    //     return $this->registered($request, $user)
+    //         ?: redirect($this->redirectPath());
+    // }
 
 }

@@ -57,7 +57,6 @@
         </button>
       </div>
       <div class="modal-body">
-        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -65,6 +64,36 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade text-left" id="event-status-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Event: <span id="event-status-name"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form method="POST" id="event-status-form">
+      <input name="_method" type="hidden" value="PATCH">
+      @csrf
+      <div class="modal-body">
+        Status: <select name="status" id="event-status-select" class="form-control">
+          <option value="New">New</option>
+          <option value="Ongoing">Ongoing</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Canceled">Canceled</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Simpan</button>
+        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Batal</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>   
 @endsection
 @section('pagecss')
 <link rel="stylesheet" type="text/css" href="{{ asset('/app-assets') }}/vendors/css/tables/datatable/datatables.min.css">
@@ -152,12 +181,12 @@ $(document).ready(function() {
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         buttons: [
             @if(Auth::user()->role_id==1)
-            {
-              text: '<i class="ft-plus"></i> Add New', className: 'buttons-add',
-              action: function ( e, dt, node, config ) {
-                  window.location = '{{ url('admin/event/create') }}'
-              }
-            },  
+            // {
+            //   text: '<i class="ft-plus"></i> Add New', className: 'buttons-add',
+            //   action: function ( e, dt, node, config ) {
+            //       window.location = '{{ url('admin/event/create') }}'
+            //   }
+            // },  
             @endif
             {
               text: '<i class="ft-plus-circle"></i> Create', className: 'buttons-add',
@@ -187,7 +216,11 @@ $(document).ready(function() {
         }} 
         ],
         fnRowCallback : function(row, data) {
+          @if(Auth::user()->role_id == 1)
+          $('td.status', row).wrapInner('<button data-id="'+data.id+'" data-event="'+data.event+'" data-status="'+data.status+'" class="btn '+data.status+' show-event-status-modal" />');
+          @else
           $('td.status', row).wrapInner('<button class="btn '+data.status+'" />');
+          @endif
         }
     });
     $('.buttons-colvis').addClass('btn btn-outline-primary mr-1');
@@ -230,5 +263,13 @@ $('body').on('click','.btnparticipant',function(){
       }
   }});     
 });
+@if(Auth::user()->role_id == 1)
+$('body').on('click','.show-event-status-modal',function(){
+  $("#event-status-name").html($(this).data("event"));
+  $("#event-status-form").attr('action','{{ url('admin/event/') }}/'+$(this).data("id")+'/updatestatus');
+  $("#event-status-select").val($(this).data("status"));
+  $("#event-status-modal").modal('show');
+});
+@endif
 </script>
 @endsection

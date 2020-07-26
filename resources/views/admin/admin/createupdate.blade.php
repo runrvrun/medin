@@ -48,16 +48,22 @@
                     @if(isset($item))
                     {{ Form::text('email', old('email',$item->email??null), array('disabled','class' => 'form-control')) }}
                     @else
-                    {{ Form::text('email', old('email',$item->email??null), array('class' => 'form-control','required')) }}
-                    </div>
-                    </div>
-                    <div class="form-group row">
-                    <label class="col-md-3 label-control" for="date">Password: </label>
-                    <div class="col-md-9">
-                    {{ Form::password('password', array('class' => 'form-control','required')) }}
+                    {{ Form::text('email', old('email',$item->email??null), array('class' => 'form-control','required','autocomplete'=>'off')) }}
                     @endif
                     </div>
-                  </div>                 
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="date">Password: </label>
+                    <div class="col-md-9">
+                    {{ Form::password('password', array('class' => 'form-control','required','autocomplete'=>'off')) }}
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 label-control" for="date">Status: </label>
+                    <div class="col-md-9">
+                    {{ Form::select('status',['Active'=>'Active','Inactive'=>'Inactive'],old('status',$item->status??null), array('class' => 'form-control','required')) }}
+                    </div>
+                  </div>
                 </div>
                 <div class="form-actions">
                   <a class="pull-right" href="{{ url('admin/admin') }}"><button type="button" class="btn btn-raised btn-warning mr-1">

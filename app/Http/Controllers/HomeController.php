@@ -47,9 +47,16 @@ class HomeController extends Controller
         return redirect( url('/#newsletter') );
     }
 
+    public function news()
+    {
+        $news = News::orderBy('created_at','DESC')->get();
+        return view('news',compact('news'));
+    }
+
     public function singlenews($id)
     {
         $item = News::find($id);
-        return view('singlenews',compact('item'));
+        $news = News::orderBy('created_at','DESC')->take(10)->get();
+        return view('singlenews',compact('item','news'));
     }
 }

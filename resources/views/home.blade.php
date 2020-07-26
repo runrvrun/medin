@@ -22,8 +22,13 @@
 			text-align:center;
 			font-size: 20px !important;
 		}
+		.news-title a{color:#fff}
 		.team-member .socials-block.read-more > li{
 			width:100%;
+		}
+		.btn.more{			
+			color: #fff;
+    		background-color: #003685
 		}
 	</style>
 </head>
@@ -73,7 +78,7 @@
 		</nav>
 	</header>
 
-	<div id="hero" class="bg bg1 static-header window-height light-text hero-section ytp-player-background clearfix" data-video="PUjmPiPFQBw" data-property="{videoURL: 'https://www.youtube.com/watch?v=PUjmPiPFQBw', containment: '#hero', autoPlay: true, realfullscreen: true, stopMovieOnBlur: false, addRaster: false, showControls: false, mute:true, startAt:0, opacity:1, gaTrack: false}">
+	<div id="hero" class="bg bg1 static-header window-height light-text hero-section ytp-player-background clearfix" data-video="po0s326L1Ic" data-property="{videoURL: 'https://www.youtube.com/watch?v=po0s326L1Ic', containment: '#hero', autoPlay: true, realfullscreen: true, stopMovieOnBlur: false, addRaster: false, showControls: false, mute:true, startAt:0, opacity:1, gaTrack: false}">
 		<div class="heading-bdlock align-center centered-block">
 			<div class="container">
 				<h1 class="editContent">Do not wait &mdash; <span class="highlight">monitor</span> your ads now!</h1>
@@ -331,22 +336,24 @@
 					<div class="team-member">
 						<div class="photo-wrapper">
 							<div class="overlay-wrapper">
-								<img src="assets/img/people/team-1.jpg" alt="">
+								<img src="{{ asset($val->featured_image) }}" alt="">
 								<div class="overlay-content">
 									<div class="text-wrapper">
 										<div class="text-container">
-											<p class="news-title">{{ $val->title }}</p>
+											<p class="news-title"><a href="{{ url('news/'.$val->id) }}">{{ $val->title }}</a></p>
 										</div>
 									</div>
-									<ul class="socials-block read-more">
-										<li><a href="{{ url('news/'.$val->id) }}">Read more ...</a></li>										
-									</ul>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				@endforeach				
+				@endforeach		
+			</div>
+			<div class="section-content row pull-right" style="margin-top:5px">
+				<div class="col-md-12">
+					<a href="{{ url('/news') }}" class="btn more">More News</a>
+				</div>
 			</div>
 		</div>				
 	</section>

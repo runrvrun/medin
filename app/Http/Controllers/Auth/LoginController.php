@@ -63,6 +63,7 @@ class LoginController extends Controller
             session(['privilege'=>$privilege]);
             //
             Log::create(['user_id'=>Auth::user()->id,'tag'=>'Login','detail'=>'Success']);
+
             return redirect()->intended('/admin');
         }else{
             Log::create(['user_id'=>0,'tag'=>'Login','detail'=>'Failed. email: '.$request->email.'; IP: '.$request->ip()]);

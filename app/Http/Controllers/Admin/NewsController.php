@@ -8,6 +8,7 @@ use Schema;
 use Session;
 use Validator;
 use App\News;
+use Image;
 
 class NewsController extends Controller
 {
@@ -92,8 +93,11 @@ class NewsController extends Controller
             $featured_image = $request->file('featured_image');
             $name = time().rand(1000,9999).'.'.$featured_image->getClientOriginalExtension();
             $destinationPath = 'uploads/news/thumbnail';
-            $featured_image->move(base_path('public/'.$destinationPath), $name);  
-            $requestData['featured_image']=$destinationPath.'/'.$name;            
+            // $featured_image->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($featured_image->getRealPath())->resize(null,300, function ($constraint) {
+                $constraint->aspectRatio();
+            })->crop(300,300)->save(base_path('public/'.$destinationPath).'/'.$name);
+            $requestData['featured_image']=$destinationPath.'/'.$name;    
         }
         if (isset($request->images)) {
             unset($requestData['images']);
@@ -155,7 +159,10 @@ class NewsController extends Controller
             $featured_image = $request->file('featured_image');
             $name = time().rand(1000,9999).'.'.$featured_image->getClientOriginalExtension();
             $destinationPath = 'uploads/news/thumbnail';
-            $featured_image->move(base_path('public/'.$destinationPath), $name);  
+            // $featured_image->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($featured_image->getRealPath())->resize(null,300, function ($constraint) {
+                $constraint->aspectRatio();
+            })->crop(300,300)->save(base_path('public/'.$destinationPath).'/'.$name);
             $requestData['featured_image']=$destinationPath.'/'.$name;            
             @unlink($item->featured_image);// delete old image
         }

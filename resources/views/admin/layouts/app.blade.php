@@ -30,10 +30,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/vendors/css/prism.min.css">
     <!-- END VENDOR CSS-->
     <!-- BEGIN APEX CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/css/app.css?v=11">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}app-assets/css/app.css?v=12">
     <!-- END APEX CSS-->
     <!-- BEGIN Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css?v=1">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/') }}css/style.css?v=2">
     <!-- END Custom CSS-->
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -50,7 +50,7 @@
         <!-- Sidebar Header starts-->
         <div class="sidebar-header">
           <div class="logo clearfix"><a href="{{ url('/admin/') }}" class="logo-text float-left">
-              <div class="logo-img"><img src="{{ asset('images/medin-white.png') }}" width="32px" /></div><span class="text align-middle"> Med-In</span></a><a id="sidebarToggle" href="javascript:;" class="nav-toggle d-none d-sm-none d-md-none d-lg-block"><i data-toggle="expanded" class="toggle-icon ft-toggle-right"></i></a><a id="sidebarClose" href="javascript:;" class="nav-close d-block d-md-block d-lg-none d-xl-none"><i class="ft-x"></i></a></div>
+              <div class="logo-img"><img src="{{ asset('images/medin-notext-white.png') }}" height="22px" /></div><span class="text align-middle"> Med-In</span></a><a id="sidebarToggle" href="javascript:;" class="nav-toggle d-none d-sm-none d-md-none d-lg-block"><i data-toggle="expanded" class="toggle-icon ft-toggle-right"></i></a><a id="sidebarClose" href="javascript:;" class="nav-close d-block d-md-block d-lg-none d-xl-none"><i class="ft-x"></i></a></div>
         </div>
         <!-- Sidebar Header Ends-->
         <!-- / main menu header-->
@@ -61,7 +61,7 @@
               @if(session('privilege')[1]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/dashboard') }}"><i class="ft-bar-chart-2"></i><span data-i18n="" class="menu-title">Dashboard</span></a></li>@endif
               @if(session('privilege')[2]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/event') }}"><i class="ft-calendar"></i><span data-i18n="" class="menu-title">Event</span></a></li>@endif
               @if(session('privilege')[3]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/invitation') }}"><i class="ft-mail"></i><span data-i18n="" class="menu-title">Invitation</span></a></li>@endif              
-              @if(session('privilege')[5]["browse"] ?? 0)<li><a href="{{ url('/admin/user/partner') }}" class="menu-item"><i class="ft-user-check"></i>Partner</a></li>@endif
+              @if(session('privilege')[5]["browse"] ?? 0)<li><a href="{{ url('/admin/partner') }}" class="menu-item"><i class="ft-user-check"></i>Partner</a></li>@endif
               @if(session('privilege')[6]["browse"] ?? 0)<li><a href="{{ url('/admin/user') }}" class="menu-item"><i class="ft-user"></i>User</a></li>@endif
               @if(session('privilege')[7]["browse"] ?? 0)<li><a href="{{ url('/admin/admin') }}" class="menu-item"><i class="ft-user-minus"></i>Administrator</a></li>@endif
               @if(session('privilege')[8]["browse"] ?? 0)<li class=" home-nav nav-item"><a href="{{ url('/admin/announcement') }}"><i class="ft-volume-2"></i><span data-i18n="" class="menu-title">Announcement</span></a></li>@endif

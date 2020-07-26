@@ -81,7 +81,6 @@
                       </div>  
                     </div>
                   </fieldset>
-                  <!-- Step 2 -->
                   <h6>MEDIA INVITATION</h6>
                   <fieldset>
                     <!-- search -->                    
@@ -95,7 +94,9 @@
                               <button id="btnsearch" class="btn btn-primary" type="button"><span class="ft-search"></span> Search</button>
                           </span>
                         </div>
-                        <div class="col-sm-7">
+                      </div>
+                      <div class="input-group row">
+                        <div class="col-sm-12">
                           <div class="btn-group quick-filter-media-type" role="group">
                             <input type="hidden" name="quick-filter-media-type" />
                             <button type="button" class="btn btn-primary">All</button>
@@ -113,24 +114,25 @@
                       </div>
                     </div>
                     <div class="row">
+                      @if(!empty($invitation->items))
                       <input type="hidden" name="selected-media-container" value="{{ json_encode(explode(',',$invites->invites_id ?? null)) }}"/>
+                      @else
+                      <input type="hidden" name="selected-media-container" value="[]"/>
+                      @endif
                       <div id="selected-media-container">  
-                        @if(isset($invitation) && !empty($invitation->items))
+                        @if(!empty($invitation->items))
                           @foreach($invitation as $key=>$val)
-                          <button id='{{ $val->id }}' type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset('/') }}/{{ $val->avatar }}'></div><div class='name'>{{ $val->name }}</div><div class='company'><small>[{{ $val->media_type }}] {{ $val->media }}</small></div></button>
+                          <div class="media-div" id="{{ $val->id }}"><button type="button" class="media-item btn btn-primary"><p class="company">{{ $val->media }}</p><p class="media-type">{{ $val->media_type }}</p><span class="image"><img src="{{ asset($val->avatar) }}"></span><p class="name">{{ $val->name }}</p></button></div>
                           @endforeach
-                        @else
-                        <span class="selected-media-container-placeholder">Search to start</span>
                         @endif
                       </div>
                     </div>
                       <!-- search result -->
                     <div class="row">
-                      <div id="media-container">                    
+                      <div id="media-container" class="media-container">    
                       </div>
                     </div>
                   </fieldset>
-                  <!-- Step 3 -->
                   <h6>CONFIRMATION</h6>
                   <fieldset>
                   <ul class="list-group">
@@ -166,7 +168,7 @@
                     </li>
                   </ul>
                   <h4>Invitation</h4>
-                  <div id="confirm-invitation"></div>
+                    <div id="confirm-invitation" class="row">    
                   </fieldset>              
                 </form>
               </div>
@@ -183,6 +185,8 @@
 <link rel="stylesheet" href="{{ asset('app-assets') }}/css/bootstrap-select.min.css">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets') }}/vendors/css/wizard.css">
 <link rel="stylesheet" type="text/css" href="{{ asset('app-assets') }}/vendors/css/pickadate/pickadate.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('slick') }}/slick.css"/>
+<link rel="stylesheet" type="text/css" href="{{ asset('slick') }}/slick-theme.css"/>
 <style>
 #selected-media-container{
   min-height: 212px;
@@ -195,13 +199,14 @@
 }
 #media-container{
   padding: 10px;
-  max-height: 650px;
-  width: 100%;
-  overflow-y: auto;
+  width: 96%;
+  margin: 0 2%;
+  /* max-height: 233px;
+  overflow-x: auto;
+  overflow-y: hidden; */
 }
 .btn.media-item{
-  padding:5px;
-  width: 154px;
+  width: 186px;
   margin-bottom: 0;
   margin-right: 10px;
 }
@@ -217,16 +222,21 @@
   content: "×";
   color: transparent;
 }
-.media-item small{
-  margin: 0 3px;
-}
 .media-item .image img{
-  border-radius: 50%;
-  margin: 3px 0;
+  margin: 3px;
+  max-width: 100%;
 }
 .media-item .name, .media-item .company{
   overflow:hidden;
   white-space: nowrap;
+}
+.company{
+  font-size: 12px;
+  margin-bottom:0;
+}
+.media-type{
+  font-size: 10px;
+  color: #cfcfcf;
 }
 #search-media input{
   width: 252px;
@@ -237,17 +247,23 @@
 #search-media .input-group-btn{
   margin-left:20px;
 }
-.selected-media-container-placeholder{
-  color: #cecece;
-  position: relative;
-  left: 42%;
-  top: 39%;
-}
 .confirman::before{
   content: ": ";
 }
 .quick-filter-media-type button{
   font-size:12px;
+}
+.slick-prev:before, .slick-next:before{
+  color: #fc8003;
+}
+.slick-slide img{
+  display: inline;
+}
+#selected-media-container>div.media-div{
+  display:inline;
+}
+#confirm-invitation>.media-div{
+  margin-bottom:10px;
 }
 </style>
 @endsection
@@ -259,6 +275,7 @@
 <script src="{{ asset('app-assets') }}/vendors/js/pickadate/picker.time.js" type="text/javascript"></script>
 <script src="{{ asset('app-assets') }}/vendors/js/pickadate/legacy.js" type="text/javascript"></script>
 <script src="{{ asset('app-assets') }}/vendors/js/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{{ asset('slick') }}/slick.min.js"></script>
 <script>
   // wizard steps
   $(document).ready( function(){
@@ -273,6 +290,13 @@
           @else
             finish: 'Submit'
           @endif
+        },
+        onStepChanged: function (event, currentIndex, priorIndex)
+        {
+            if (currentIndex === 1)
+            {
+              loadpartner();
+            }            
         },
         onFinished: function (event, currentIndex) {
           @if(isset($item))
@@ -336,43 +360,51 @@
       $('body').find('#btnsearch').click();
       $(".quick-filter-media-type").children().attr('class','btn btn-outline-primary');
       $(this).attr('class','btn btn-primary');
-    })
+    })   
   });
   
-  // search // use delegate from body because originally was hidden and js won't run on hidden  
+  // search // use delegate from body because originally was hidden and js won't run on hidden
+  function slickinit(){
+    $('#media-container').not('.slick-initialized').slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        infinite:false,
+        arrows: true
+    });
+  };
+  function loadpartner(){
+    slickinit();
+    $.ajax({
+      url: "{{ url('admin/user/getpartners') }}", 
+      data: {
+        keyword: $('#search').val(),
+        mediatype: $('input[name=quick-filter-media-type]').val(),
+        exclude: $('input[name=selected-media-container]').val()
+      }, 
+      success: function(result){
+        if(result.length){
+          $.each(result, function(k, v) {
+            $('#media-container').slick('slickAdd','<div class="media-div" id="'+v.id+'"><button type="button" class="media-item btn btn-primary"><p class="company">'+v.media+'</p><p class="media-type">'+v.media_type+'</p><span class="image"><img src="{{ asset('/') }}'+v.avatar+'"></span><p class="name">'+v.name+'</p></button></div>');
+          });
+        }else{
+          $('#media-container').html('<p>No result found.</p>');
+        }
+      }
+    });
+  }
+
   $('body').on('keypress','#search',function(e) {
     if(e.which == 13) {
       $('#btnsearch').click();
     }
   });
   $('body').on('click','#btnsearch',function(){
-    if($('#search').val().length>2){
-      $('#media-container').empty();
-      $(".selected-media-container-placeholder").empty();
-      $.ajax({
-        url: "{{ url('admin/user/getpartners') }}", 
-        data: {
-          keyword: $('#search').val(),
-          mediatype: $('input[name=quick-filter-media-type]').val(),
-          exclude: $('input[name=selected-media-container]').val()
-        }, 
-        success: function(result){
-          if(result.length){
-            $.each(result, function(k, v) {
-              $('#media-container').append("<button id='"+v.id+"' type='button' class='media-item btn btn-primary'><div class='image'><img src='{{ asset('/') }}/"+v.avatar+"'></div><div class='name'>"+v.name+"</div><div class='company'><small>["+v.media_type+"] "+v.media+"</small></div></button>");
-            });
-          }else{
-            $('#media-container').html('<p>No result found.</p>');
-          }
-        }
-      });
-    }else{
-      $('#media-container').html('<p style="color:#aaa">Please enter at least 3 characters.</p>');
-    }
+      $('#media-container').slick('unslick');
+      loadpartner();
   });
   // click result, add to selected  
-  $('body').on('click','#media-container .media-item',function(){
-    if($('#selected-media-container').html().indexOf('Search below to start')>0){
+  $('body').on('click','#media-container .media-div',function(){
+    if($('#selected-media-container').html().indexOf('Search')>0){
       var selmed = [];
       $('#selected-media-container').empty();
     }else{
@@ -381,10 +413,12 @@
     }
     selmed.push($(this).attr('id'));
     $('input[name=selected-media-container]').val(JSON.stringify(selmed));
+    $('#media-container').slick('unslick');
     $(this).appendTo($('#selected-media-container'));
+    slickinit();
   });
   // click selected, return to result
-  $('body').on('click','#selected-media-container .media-item',function(){
+  $('body').on('click','#selected-media-container .media-div',function(){
     var value = $('input[name=selected-media-container]').val();
     value = JSON.parse(value);
     index = value.indexOf($(this).attr('id'));
@@ -392,7 +426,9 @@
       value.splice(index, 1);
     }
     $('input[name=selected-media-container]').val(JSON.stringify(value));
+    $('#media-container').slick('unslick');
     $(this).appendTo($('#media-container'));
+    slickinit();
   });
 </script>
 <script>

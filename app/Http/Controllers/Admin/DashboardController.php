@@ -26,6 +26,18 @@ class DashboardController extends Controller
      */
     public function dashboard(Request $request, $action = null)
     {
+        //set privilege for newly verified user
+        if(empty(session('privilege'))){
+            // get role privileges
+            $priv = \App\Role_privilege::where('role_id',Auth::user()->role_id)->get();
+            foreach($priv as $key=>$pri){
+                $privilege[$pri->page_id] = ['browse'=>$pri->browse,'add'=>$pri->add,'edit'=>$pri->edit,'delete'=>$pri->delete];
+            }
+            session(['privilege'=>$privilege]);
+            //
+            Log::create(['user_id'=>Auth::user()->id,'tag'=>'Login','detail'=>'Success. New email verified user']);
+            //
+        }
         $data = [];
         if(Auth::user()->role_id == 1){
             $data['total_event'] = \App\Event::count();

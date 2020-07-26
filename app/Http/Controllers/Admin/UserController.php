@@ -14,6 +14,7 @@ use Validator;
 use Hash;
 use \Carbon\Carbon;
 use Auth;
+use Image;
 
 class UserController extends Controller
 {
@@ -159,9 +160,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:users',
+            'name' => 'required',
             'email' => 'required|unique:users',
-            'password' => 'required|unique:users',
+            'password' => 'required',
         ]);
 
         $requestData = $request->all();
@@ -177,11 +178,13 @@ class UserController extends Controller
         }
         // upload images
         if ($request->hasFile('avatar')) {
-            // delete old avatar
             $avatar = $request->file('avatar');
             $name = $user->id.'_avatar_'.time().'.'.$avatar->getClientOriginalExtension();
             $destinationPath = 'uploads/avatar';
-            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            // $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($avatar->getRealPath())->resize(120,null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->crop(120,120)->save(base_path('public/'.$destinationPath).'/'.$name);
             $requestData['avatar']=$destinationPath.'/'.$name;            
         }else{
             $requestData['avatar']='/uploads/avatar/default.jpg';            
@@ -190,14 +193,22 @@ class UserController extends Controller
             $avatar = $request->file('id_photo');
             $name = $user->id.'_id_'.time().'.'.$avatar->getClientOriginalExtension();
             $destinationPath = 'uploads/avatar';
-            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            // $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($avatar->getRealPath())->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save(base_path('public/'.$destinationPath).'/'.$name);
             $requestData['id_photo']=$destinationPath.'/'.$name;            
         }
         if ($request->hasFile('company_id_photo')) {
             $avatar = $request->file('company_id_photo');
             $name = $user->id.'_companyid_'.time().'.'.$avatar->getClientOriginalExtension();
             $destinationPath = 'uploads/avatar';
-            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            // $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($avatar->getRealPath())->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save(base_path('public/'.$destinationPath).'/'.$name);
             $requestData['company_id_photo']=$destinationPath.'/'.$name;            
         }
         User::create($requestData);
@@ -278,26 +289,45 @@ class UserController extends Controller
         unset($requestData['registerpartner']);
         // upload images
         if ($request->hasFile('avatar')) {
-            // delete old avatar
             $avatar = $request->file('avatar');
             $name = $user->id.'_avatar_'.time().'.'.$avatar->getClientOriginalExtension();
             $destinationPath = 'uploads/avatar';
-            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            // $avatar->move(base_path('public/'.$destinationPath), $name);
+            $image = Image::make($avatar->getRealPath())->resize(120,null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->crop(120,120)->save(base_path('public/'.$destinationPath).'/'.$name);
             $requestData['avatar']=$destinationPath.'/'.$name;            
+            if($user->avatar != '/uploads/avatar/default.jpg'){
+                @unlink(base_path('public/'.$user->avatar));// delete old avatar
+            }
         }
         if ($request->hasFile('id_photo')) {
             $avatar = $request->file('id_photo');
             $name = $user->id.'_id_'.time().'.'.$avatar->getClientOriginalExtension();
             $destinationPath = 'uploads/avatar';
-            $avatar->move(base_path('public/'.$destinationPath), $name);  
+            // $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($avatar->getRealPath())->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save(base_path('public/'.$destinationPath).'/'.$name);
             $requestData['id_photo']=$destinationPath.'/'.$name;            
+            if($user->id_photo != '/uploads/avatar/default.jpg'){
+                @unlink(base_path('public/'.$user->id_photo));// delete old avatar
+            }
         }
         if ($request->hasFile('company_id_photo')) {
             $avatar = $request->file('company_id_photo');
             $name = $user->id.'_companyid_'.time().'.'.$avatar->getClientOriginalExtension();
             $destinationPath = 'uploads/avatar';
-            $avatar->move(base_path('public/'.$destinationPath), $name);  
-            $requestData['company_id_photo']=$destinationPath.'/'.$name;            
+            // $avatar->move(base_path('public/'.$destinationPath), $name);  
+            $image = Image::make($avatar->getRealPath())->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->save(base_path('public/'.$destinationPath).'/'.$name);
+            $requestData['company_id_photo']=$destinationPath.'/'.$name;    
+            if($user->company_id_photo != '/uploads/avatar/default.jpg'){
+                @unlink(base_path('public/'.$user->company_id_photo));// delete old avatar
+            }        
         }
         $user->update($requestData);
         if($request->registerpartner){
@@ -311,7 +341,7 @@ class UserController extends Controller
                 Session::flash('message', 'Partner approved'); 
             }
             Session::flash('alert-class', 'alert-success'); 
-            return redirect('admin/user/partner');
+            return redirect('admin/partner');
         }
         Session::flash('message', 'User diubah'); 
         Session::flash('alert-class', 'alert-success'); 

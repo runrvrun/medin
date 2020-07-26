@@ -92,7 +92,7 @@ class EventController extends Controller
             $query->where('events.user_id',Auth::user()->id);
         }
 
-        return datatables($query->groupBy('events.id')
+        return datatables($query->groupBy('events.id')        
         )->addColumn('action', function ($dt) {
             return view('admin.event.action',compact('dt'));
         })
@@ -122,7 +122,7 @@ class EventController extends Controller
         return view('admin.event.createupdate',compact('cols'));
     }
     public function createwizard()
-    {
+    {        
         $cols = $this->cols;        
         $cityprov = \App\City::select(DB::raw("CONCAT(city,', ',province) AS cityprov"),'cities.id')
         ->join('provinces','province_id','provinces.id')->pluck('cityprov','cities.id');
@@ -237,9 +237,18 @@ class EventController extends Controller
         $request->validate([
             'event' => 'required|unique:events,event,'.$event->id,
         ]);
-
+        
         $requestData = $request->all();
+        unset($requestData['quick-filter-media-type']);
         Event::find($event->id)->update($requestData);
+        Session::flash('message', 'Event updated'); 
+        Session::flash('alert-class', 'alert-success'); 
+        return redirect('admin/event');
+    }
+    public function updatestatus($event_id,Request $request)
+    {
+        $requestData = $request->all();
+        Event::find($event_id)->update($requestData);
         Session::flash('message', 'Event updated'); 
         Session::flash('alert-class', 'alert-success'); 
         return redirect('admin/event');
@@ -251,6 +260,7 @@ class EventController extends Controller
         ]);
 
         $requestData = $request->all();
+        unset($requestData['quick-filter-media-type']);
         $invitation = json_decode($requestData['selected-media-container']);
         $requestData['datetime'] = Carbon::createFromFormat('l, d M Y g:i A',$request->date.' '.$request->time);
         unset($requestData['date']);

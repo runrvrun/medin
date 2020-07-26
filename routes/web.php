@@ -4,6 +4,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('userlogin','Auth\\LoginController@authenticate')->name('userlogin');
+Route::get('/news', 'HomeController@news');
 Route::get('/news/{a}', 'HomeController@singlenews');
 Route::group( ['prefix' => 'admin','middleware' => 'verified' ], function()
 {
@@ -20,6 +21,7 @@ Route::group( ['prefix' => 'admin','middleware' => 'verified' ], function()
     Route::post('/event/storewizard','Admin\EventController@storewizard');
     Route::get('/event/{a}/editwizard','Admin\EventController@editwizard');
     Route::patch('/event/{a}/updatewizard','Admin\EventController@updatewizard');
+    Route::patch('/event/{a}/updatestatus','Admin\EventController@updatestatus');
     Route::get('/event/{a}/approve','Admin\EventController@approve');
     Route::get('/event/{a}/reject','Admin\EventController@reject');
     Route::get('/event/{a}/cancel','Admin\EventController@cancel');
@@ -31,12 +33,12 @@ Route::group( ['prefix' => 'admin','middleware' => 'verified' ], function()
     Route::get('/invitation/{a}/reject','Admin\InvitationController@reject');
     Route::resource('/invitation','Admin\InvitationController');
     Route::get('/user/getpartners','Admin\UserController@getpartners');
-    Route::get('/user/partner','Admin\UserController@indexpartner');
-    Route::post('/user/indexpartnerjson','Admin\UserController@indexpartnerjson');
     Route::get('/user/{a}/changepassword','Admin\UserController@changeuserpassword');
     Route::get('/user/partner/review/{a}','Admin\UserController@partnerreview');
     Route::post('/user/indexjson','Admin\UserController@indexjson');
     Route::resource('/user', 'Admin\UserController');    
+    Route::post('/partner/indexjson','Admin\PartnerController@indexjson');
+    Route::resource('/partner', 'Admin\PartnerController');    
     Route::post('/admin/indexjson','Admin\AdminController@indexjson');
     Route::resource('/admin', 'Admin\AdminController');    
     Route::get('/registerpartner','Admin\UserController@registerpartner');

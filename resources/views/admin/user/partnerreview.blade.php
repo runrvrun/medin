@@ -55,7 +55,7 @@
                   <div class="form-group row">
                     <label class="col-md-3 label-control" for="date"></label>
                     <div class="col-md-9">
-                      <img src="{{ asset($item->id_photo) }}" height="200px" />
+                      <img src="{{ asset($item->id_photo) }}" height="150px" />
                     </div>
                   </div>
                   <div class="form-group row">
@@ -93,7 +93,7 @@
                   <div class="form-group row">
                     <label class="col-md-3 label-control" for="date"></label>
                     <div class="col-md-9">
-                      <img src="{{ asset($item->company_id_photo) }}" height="200px" />
+                      <img src="{{ asset($item->company_id_photo) }}" height="150px" />
                     </div>
                   </div>
                 </div>

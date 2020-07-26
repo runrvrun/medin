@@ -59,7 +59,21 @@
 				</button>
 				<div class="navigation-navbar collapsed">
 					<ul class="navigation-bar navigation-bar-left">
-						<li><a href="/">Home</a></li>						
+						<li><a href="{{ url('/') }}#hero">Home</a></li>
+						<li><a href="{{ url('/') }}#about">About</a></li>
+						<li><a href="{{ url('/') }}#feature">Features</a></li>
+						<li><a href="{{ url('/') }}#pricing">Prices</a></li>
+						<li><a href="{{ url('/') }}#feedback">Feedback</a></li>
+						<li><a href="{{ url('/') }}#process">Process</a></li>
+						<li><a href="{{ url('/') }}#contact">Contact</a></li>
+						<li id="menu-item-4742" class="dropdown"><a title="EXTRA" class="dropdown-toggle" href="#">Extra <span class="caret"></span></a>
+							<ul role="menu" class=" dropdown-menu" style="display: none;">
+								<li id="menu-item-4743" ><a href="http://vislog.id/" target="_blank">Vislog</a></li>																					
+								<li id="menu-item-4743" ><a href="https://bitplay.id/" target="_blank">Bitplay</a></li>																					
+								<li id="menu-item-4743" ><a href="http://hitek.co.id/" target="_blank">Hitek</a></li>																					
+								<li id="menu-item-4743" ><a href="http://csigroup.co.id/" target="_blank">CSI</a></li>																					
+							</ul>
+							</li>
 					</ul>
 					<ul class="navigation-bar navigation-bar-right">
 						<li><a href="{{ url('login') }}">Login</a></li>
@@ -69,25 +83,61 @@
 		</nav>
 	</header>
 
-	<div class="container">		
-		<h2 class="content-title">{!! $item->title !!}</h2>
-		<div class="flexslider">
-			<ul class="slides">
-				@php
-				$slides = [];	
-				$slides = json_decode($item->images);					
-				@endphp
-				@if($slides)
-				@foreach($slides as $val)
-				<li>
-				<img class="content-image" src="{{ asset($val) }}" />
-				</li>
-				@endforeach
-				@endif
-			</ul>
+	<div class="container blog" style="margin-top:50px">
+		<div class="col-md-9 col-lg-8 post-list">
+
+			<article class="post">
+				<span class="post-date base-clr-bg">
+					<span class="post-day">{!! $item->created_at->format('d') !!}</span>
+					<span class="post-month">{!! $item->created_at->format('M') !!}</span>
+					<span class="post-year">{!! $item->created_at->format('Y') !!}</span>
+				</span>
+
+				<div class="post-content">
+					<h3 class="post-title highlight">{!! $item->title !!}</h3>
+
+				<div class="flexslider">
+					<ul class="slides">
+						@php
+						$slides = [];	
+						$slides = json_decode($item->images);					
+						@endphp
+						@if($slides)
+						@foreach($slides as $val)
+						<li>
+						<img class="content-image" src="{{ asset($val) }}" />
+						</li>
+						@endforeach
+						@endif
+					</ul>
+				</div>
+					<div class="post-text">
+						{!! $item->content !!}
+					</div>
+				</div>
+			</article>
 		</div>
-		<div class="content-content">
-		{!! $item->content !!}
+
+
+		<div class="sidebar col-md-3 col-lg-4">
+			<div class="blog-widget blog-recent-posts">
+				<h6>NEWS</h6>
+
+				<ul class="recent-posts-list">
+					@foreach($news as $new)
+					<li class="recent-posts-item">
+						<span class="recent-posts-item-image"><img src="{{ asset($new->featured_image) }}" alt=""></span>
+
+						<div class="recent-posts-item-info">
+							<a href="#" class="recent-posts-item-title">{{ $new->title }}</a>
+							<span class="recent-posts-item-date">{{ $new->created_at->format('d M Y') }}</span>
+						</div>
+					</li>
+					@endforeach
+				</ul>
+				<a href="{{ url('/news') }}" class="btn more">More News</a>
+			</div>
+
 		</div>
 	</div>
 
