@@ -114,7 +114,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      @if(!empty($invitation->items))
+                      @if(!empty($invitation))
                       <input type="hidden" name="selected-media-container" value="{{ json_encode(explode(',',$invites->invites_id ?? null)) }}"/>
                       @else
                       <input type="hidden" name="selected-media-container" value="[]"/>
@@ -379,12 +379,19 @@
       data: {
         keyword: $('#search').val(),
         mediatype: $('input[name=quick-filter-media-type]').val(),
-        exclude: $('input[name=selected-media-container]').val()
+        // exclude: $('input[name=selected-media-container]').val()
+        exclude: ''
       }, 
       success: function(result){
         if(result.length){
+          var excl = $.parseJSON($('input[name=selected-media-container]').val());
+          // if in excl, add to selected media container
           $.each(result, function(k, v) {
-            $('#media-container').slick('slickAdd','<div class="media-div" id="'+v.id+'"><button type="button" class="media-item btn btn-primary"><p class="company">'+v.media+'</p><p class="media-type">'+v.media_type+'</p><span class="image"><img src="{{ asset('/') }}'+v.avatar+'"></span><p class="name">'+v.name+'</p></button></div>');
+            if($.inArray(v.id.toString(),excl) > -1){
+              $('#selected-media-container').append('<div class="media-div" id="'+v.id+'"><button type="button" class="media-item btn btn-primary"><p class="company">'+v.media+'</p><p class="media-type">'+v.media_type+'</p><span class="image"><img src="{{ asset('/') }}'+v.avatar+'"></span><p class="name">'+v.name+'</p></button></div>');
+            }else{
+              $('#media-container').slick('slickAdd','<div class="media-div" id="'+v.id+'"><button type="button" class="media-item btn btn-primary"><p class="company">'+v.media+'</p><p class="media-type">'+v.media_type+'</p><span class="image"><img src="{{ asset('/') }}'+v.avatar+'"></span><p class="name">'+v.name+'</p></button></div>');
+            }
           });
         }else{
           $('#media-container').html('<p>No result found.</p>');

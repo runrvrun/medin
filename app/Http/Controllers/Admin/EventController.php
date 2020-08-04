@@ -14,6 +14,7 @@ use Session;
 use Validator;
 use App\Event;
 use App\Invitation;
+use App\User;
 use App\Log;
 
 class EventController extends Controller
@@ -86,7 +87,7 @@ class EventController extends Controller
       END) AS participant")
         ->leftJoin('invitations','event_id','events.id')
         ->leftJoin('users','events.user_id','users.id')
-        ->leftJoin('cities','events.city_id','cities.id');
+        ->leftJoin('cities','events.city_id','cities.id')->orderBy('events.id','DESC');
 
         if(Auth::user()->role_id == 2){
             $query->where('events.user_id',Auth::user()->id);
@@ -249,8 +250,55 @@ class EventController extends Controller
     {
         $requestData = $request->all();
         Event::find($event_id)->update($requestData);
-        Session::flash('message', 'Event updated'); 
-        Session::flash('alert-class', 'alert-success'); 
+        $data['event'] = Event::select('events.*','cities.city')->where('events.id',$event_id)->leftJoin('cities','city_id','cities.id')->first();
+        if($request->status == 'Ongoing'){
+            // send email to creator
+            $creator = User::find($data['event']->user_id);
+            try{
+                $to_name = $creator->name;
+                $to_email = $creator->email;
+                $data['fullname'] = $creator->name;
+                    
+                Mail::send('email.event_approved', $data, function($message) use ($to_name, $to_email, $data) {
+                    $message->to($to_email, $to_name)
+                            ->subject('Your Event is Approved! - '.$data['event']->event);
+                    $message->from('noreply@medin.id','MedIn');
+                });
+            }catch(Exception $e){
+                $return = [
+                    'status' => 'Fail sending email'
+                ];
+                return response($return,500);
+            }
+            // send email to invites
+            try{
+                $invites = Invitation::select('invitations.*','users.*','events.event')->leftJoin('users','invitations.user_id','users.id')->leftJoin('events','event_id','events.id')->where('event_id',$data['event']->id)->get();
+                foreach($invites as $inv){
+                    Log::create(['user_id'=>$inv->user_id,'tag'=>'Event Invite','detail'=>'You are invited to attend '.Html::link('admin/invitation',$inv->event).'.']);
+                    $to_name = $inv->name;
+                    $to_email = $inv->email;
+                    $data['fullname' ]= $inv->name;
+                    
+                    Mail::send('email.event_invitation', $data, function($message) use ($to_name, $to_email, $data) {
+                        $message->to($to_email, $to_name)
+                        ->subject('Event Invitation: '.$data['event']->event);
+                        $message->from('noreply@medin.id','MedIn');
+                    });
+                }
+                Session::flash('message', 'Event approved. Invitation sent'); 
+                Session::flash('alert-class', 'alert-success'); 
+            }catch(Exception $e){
+                Session::flash('message', 'Event update failed'); 
+                Session::flash('alert-class', 'alert-error');     
+                $return = [
+                    'status' => 'Fail sending email'
+                ];
+                return response($return,500);
+            }
+        }else{
+            Session::flash('message', 'Event updated'); 
+            Session::flash('alert-class', 'alert-success'); 
+        }
         return redirect('admin/event');
     }
     public function updatewizard($event_id,Request $request)

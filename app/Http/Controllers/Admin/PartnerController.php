@@ -57,7 +57,7 @@ class PartnerController extends Controller
 
     public function indexjson($x=null)
     {
-        $query = User::where('role_id',2)->whereNotNull('partner_status');
+        $query = User::where('role_id',2)->whereNotNull('partner_status')->orderBy('id','DESC');
         return datatables($query->get())
         ->addColumn('action', function ($dt) {
             return view('admin.partner.action',compact('dt'));

@@ -93,7 +93,7 @@ class UserController extends Controller
         $query = User::select('users.*','role','city')
         ->join('roles','role_id','roles.id')
         ->leftJoin('cities','city_id','cities.id')
-        ->where('role_id',2);
+        ->where('role_id',2)->orderBy('id','DESC');
         return datatables($query->get())
         ->addColumn('action', function ($dt) {
             return view('admin.user.action',compact('dt'));
