@@ -369,17 +369,17 @@
         slidesToShow: 4,
         slidesToScroll: 1,
         infinite:false,
-        arrows: true
+        arrows: true,
+        swipeToSlide: true
     });
   };
   function loadpartner(){
-    slickinit();
     $.ajax({
       url: "{{ url('admin/user/getpartners') }}", 
       data: {
         keyword: $('#search').val(),
         mediatype: $('input[name=quick-filter-media-type]').val(),
-        // exclude: $('input[name=selected-media-container]').val()
+        include: $('input[name=selected-media-container]').val(),
         exclude: ''
       }, 
       success: function(result){
@@ -387,6 +387,9 @@
           var excl = $.parseJSON($('input[name=selected-media-container]').val());
           // if in excl, add to selected media container
           $('#selected-media-container').empty();
+          $('#media-container').empty();
+          slickinit();
+          console.log(result);
           $.each(result, function(k, v) {
             if($.inArray(v.id.toString(),excl) > -1){
               $('#selected-media-container').append('<div class="media-div" id="'+v.id+'"><button type="button" class="media-item btn btn-primary"><p class="company">'+v.media+'</p><p class="media-type">'+v.media_type+'</p><span class="image"><img src="{{ asset('/') }}'+v.avatar+'"></span><p class="name">'+v.name+'</p></button></div>');

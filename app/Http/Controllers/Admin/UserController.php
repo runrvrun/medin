@@ -427,20 +427,27 @@ class UserController extends Controller
     {
         $user = User::where('partner_status','active');
         if(!empty($request->keyword)){
-            $user->where('name','like','%'.$request->keyword.'%');
+            // $user->where('name','like','%'.$request->keyword.'%');
             $user->where(function($q) use($request){
                 $q->where('name','like','%'.$request->keyword.'%')
-                ->orWhere('media','like','%'.$request->keyword.'%');
+                ->orWhere('media','like','%'.$request->keyword.'%')
+                ->orWhere('email','like','%'.$request->keyword.'%');
             });
         }
         if(!empty($request->mediatype) && $request->mediatype !== 'All'){
             $user->where('media_type',$request->mediatype);
         }
-        if(!empty($request->exclude)){
-            $exclude = json_decode($request->exclude,true);
-            $user->whereNotIn('id',$exclude);
+        if(!empty($request->include)){
+            $include = json_decode($request->include,true);
+            $user2 = User::whereIn('id',$include)->get();
+            $userm = $user->get();
+            foreach($user2 as $u){
+                $userm->add($u);
+            }
+            return $userm->unique();
+        }else{
+            return $user->get();
         }
-        return $user->get();
     }
     
     public function partnerreview($user_id)
